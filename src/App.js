@@ -1,12 +1,10 @@
 import "./App.css";
-import AppWrap from "./appWrap";
-import AddForm from "./form";
-
+import AppTheme from "./components/AppTheme";
 
 function App() {
   return (
     <div className="App">
-      <AppWrap />
+      <AppTheme />
     </div>
   );
 }
