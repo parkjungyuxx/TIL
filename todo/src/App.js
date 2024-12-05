@@ -1,12 +1,11 @@
 import "./App.css";
-import Main from "./components/Main";
+import TodoList from "./components/TodoList/TodoList";
+
 
 function App() {
   return (
-    <div
-      className="flex justify-center content-center"
-    >
-      <Main />
+    <div className="w-full h-screen flex justify-center content-center">
+      <TodoList />
     </div>
   );
 }
