@@ -8,16 +8,18 @@ export default function Todo({ todo, onUpdate, onDelete }) {
     const status = e.target.checked ? "completed" : "active";
     onUpdate({ ...todo, status });
   };
+
+  const handleDelete = () => onDelete(todo)
   return (
     <li>
       <input
         type="checkbox"
         id="checkbox"
         checked={status === "completed"}
-        onClick={handleChange}
+        onChange={handleChange}
       />
       <label htmlFor="checkbox">{text}</label>
-      <button>
+      <button onClick={handleDelete}>
         <FaRegTrashAlt />
       </button>
     </li>
