@@ -7,6 +7,8 @@ import NotFound from "./pages/NotFound";
 import Videos from "./pages/Videos";
 import Root from "./pages/Root";
 import VideoDetail from "./pages/VideoDetail";
+import Game from "./pages/dd";
+import MainProducts from "./components/MainProducts";
 
 const router = createBrowserRouter([
   {
@@ -16,13 +18,15 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "/videos", element: <Videos /> },
-      { path: "/videos/:videoId", element: <VideoDetail />}
+      { path: "/videos/:videoId", element: <VideoDetail /> },
     ],
   },
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  // return <RouterProvider router={router} />;
+  return <MainProducts />;
+ 
 }
 
 export default App;
