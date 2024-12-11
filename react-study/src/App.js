@@ -7,8 +7,10 @@ import NotFound from "./pages/NotFound";
 import Videos from "./pages/Videos";
 import Root from "./pages/Root";
 import VideoDetail from "./pages/VideoDetail";
-import Game from "./pages/dd";
 import MainProducts from "./components/MainProducts";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -25,8 +27,11 @@ const router = createBrowserRouter([
 
 function App() {
   // return <RouterProvider router={router} />;
-  return <MainProducts />;
- 
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MainProducts />
+    </QueryClientProvider>
+  );
 }
 
 export default App;
