@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@tanstack/react-query": "^5.62.3",
+    "@tanstack/react-query-devtools": "^5.62.7",
     "cra-template": "1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
