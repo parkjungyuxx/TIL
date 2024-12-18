@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound";
 import Videos from "./pages/Videos";
 import VideosDetail from "./pages/VideosDetail";
 
+
 const router = createBrowserRouter([
   {
     path: "/",
