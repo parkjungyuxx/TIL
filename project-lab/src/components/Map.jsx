@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react"; // useState와 useEffect를 React에서 가져오기
-import { NaverMap, Marker, useNavermaps, Container as MapDiv } from "react-naver-maps";
+import React, { useState, useEffect } from "react";
+import {
+  NaverMap,
+  Marker,
+  useNavermaps,
+  Container as MapDiv,
+} from "react-naver-maps";
 
 const Map = () => {
   const navermaps = useNavermaps();
-  const [location, setLocation] = useState(null); // 초기 상태 설정
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -13,13 +18,13 @@ const Map = () => {
           setLocation({ lat: latitude, lng: longitude });
         },
         (error) => {
-          console.error("Error fetching location:", error);
-          setLocation({ lat: 37.3595704, lng: 127.105399 }); // 기본 위치
+          console.error("위치 가져올수 없삼:", error);
+          setLocation({ lat: 37.3595704, lng: 127.105399 }); // 네이버 본사 위치
         }
       );
     } else {
-      console.error("Geolocation is not supported by this browser.");
-      setLocation({ lat: 37.3595704, lng: 127.105399 }); // 기본 위치
+      console.error("현재 위치를 가져올수 없삼.");
+      setLocation({ lat: 37.3595704, lng: 127.105399 }); // 네이버 본사 위치
     }
   }, []);
 
@@ -31,7 +36,7 @@ const Map = () => {
     <MapDiv style={{ width: "100vw", height: "100vh", position: "relative" }}>
       <NaverMap
         defaultCenter={new navermaps.LatLng(location.lat, location.lng)}
-        defaultZoom={14}
+        defaultZoom={18}
         style={{ width: "100vw", height: "100vh" }}
       >
         <Marker
