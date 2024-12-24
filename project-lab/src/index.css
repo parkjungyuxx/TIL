@@ -23,6 +23,9 @@ a:hover {
 }
 
 body {
+  flex: display;
+  justify-content: center;
+  align-items: center;
   margin: 0;
   display: flex;
   place-items: center;
