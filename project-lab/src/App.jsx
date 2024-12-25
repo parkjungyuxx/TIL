@@ -1,6 +1,6 @@
 import React from "react";
 import { NavermapsProvider } from "react-naver-maps"; 
-import Map from "./components/Map"; 
+import Map from "./components/map/Map"; 
 
 function App() {
   const clientId = import.meta.env.VITE_NAVER_MAP_CLIENT_ID;
