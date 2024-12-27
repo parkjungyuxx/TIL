@@ -5,62 +5,76 @@ export default function KakaoMap() {
   const [info, setInfo] = useState();
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState();
+  const [userLocation, setUserLocation] = useState(null); // 초기 위치를 null로 설정
+  const [userCurrentDong, setUserCurrentDong] = useState(null);
 
+  // 현재 위치 가져오기
   useEffect(() => {
-    if (!map) return;
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log(position);
+          setUserLocation({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          setUserLocation({ lat: 37.566826, lng: 126.9786567 });
+        }
+      );
+    } else {
+      setUserLocation({ lat: 37.566826, lng: 126.9786567 }); // 기본 위치 설정
+    }
+  }, []);
+
+  // 검색 결과로 마커 생성
+  useEffect(() => {
+    if (!map || !userLocation) return;
     const ps = new kakao.maps.services.Places();
 
-    ps.keywordSearch("이태원 맛집", (data, status, _pagination) => {
+    ps.keywordSearch("명일동 동물병원", (data, status) => {
       if (status === kakao.maps.services.Status.OK) {
-        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-        // LatLngBounds 객체에 좌표를 추가합니다
         const bounds = new kakao.maps.LatLngBounds();
-        let markers = [];
-
-        for (var i = 0; i < data.length; i++) {
-          // @ts-ignore
-          markers.push({
+        const markers = data.map((place) => {
+          bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+          return {
             position: {
-              lat: data[i].y,
-              lng: data[i].x,
+              lat: place.y,
+              lng: place.x,
             },
-            content: data[i].place_name,
-          });
-          // @ts-ignore
-          bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-        }
-        setMarkers(markers);
+            content: place.place_name,
+          };
+        });
 
-        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-        map.setBounds(bounds);
+        setMarkers(markers);
+        map.setBounds(bounds); // 검색 결과에 맞게 지도 범위 설정
       }
     });
-  }, [map]);
+  }, [map, userLocation]);
 
+  // 지도 렌더링
   return (
-    <Map // 로드뷰를 표시할 Container
-      center={{
-        lat: 37.566826,
-        lng: 126.9786567,
-      }}
-      style={{
-        width: "800px",
-        height: "1200px",
-      }}
-      level={3}
-      onCreate={setMap}
-    >
-      {markers.map((marker) => (
-        <MapMarker
-          key={`marker-${marker.content}-${marker.position.lat},${marker.position.lng}`}
-          position={marker.position}
-          onClick={() => setInfo(marker)}
-        >
-          {info && info.content === marker.content && (
-            <div style={{ color: "#000" }}>{marker.content}</div>
-          )}
-        </MapMarker>
-      ))}
-    </Map>
+    userLocation && ( // 사용자 위치를 가져온 후에만 지도 표시
+      <Map
+        center={userLocation} // 사용자의 현재 위치를 지도 중심으로 설정
+        style={{
+          width: "800px",
+          height: "1200px",
+        }}
+        level={2}
+        onCreate={setMap}
+      >
+        {markers.map((marker) => (
+          <MapMarker
+            key={`marker-${marker.content}-${marker.position.lat},${marker.position.lng}`}
+            position={marker.position}
+            onClick={() => setInfo(marker)}
+          >
+            {info && info.content === marker.content && (
+              <div style={{ color: "#000" }}>{marker.content}</div>
+            )}
+          </MapMarker>
+        ))}
+      </Map>
+    )
   );
 }
