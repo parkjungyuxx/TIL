@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { MapMarker, Map } from "react-kakao-maps-sdk";
-import map_pin from "../map/map_pin.jpg";
 import dog from "../map/dog.png";
-import pin from "../map/pin.png";
+import pin from "../map/pin.svg";
 
 export default function KakaoMap() {
   const [info, setInfo] = useState();
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState();
-  const [userLocation, setUserLocation] = useState(null); // 초기 위치를 null로 설정
+  const [userLocation, setUserLocation] = useState(null);
   const [roadName, setRoadName] = useState(null);
 
   // 현재 위치 가져오기
