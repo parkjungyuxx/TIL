@@ -34,7 +34,7 @@ export default function KakaoMap() {
     if (!map || !userLocation) return;
     const ps = new kakao.maps.services.Places();
 
-    ps.keywordSearch("고덕로240 동물병원", (data, status) => {
+    ps.keywordSearch(`${roadName}동물병원`, (data, status) => {
       if (status === kakao.maps.services.Status.OK) {
         const bounds = new kakao.maps.LatLngBounds();
         const markers = data.map((place) => {
