@@ -28,6 +28,23 @@ export default function KakaoMap() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!userLocation) return;
+
+    const geocoder = new kakao.maps.services.Geocoder();
+    const coord = new kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+
+    geocoder.coord2Address(coord.getLng(), coord.getLat(), (result, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const roadAddress = result[0].road_address.address_name; // 도로명 주소
+        setRoadName(roadAddress || "");
+        console.log(roadName);
+      } else {
+        setRoadName("");
+      }
+    });
+  }, [userLocation]);
+
   // 검색 결과로 마커 생성
   useEffect(() => {
     if (!map || !userLocation) return;
@@ -53,23 +70,6 @@ export default function KakaoMap() {
     });
   }, [map, userLocation]);
 
-  useEffect(() => {
-    if (!userLocation) return;
-
-    const geocoder = new kakao.maps.services.Geocoder();
-    const coord = new kakao.maps.LatLng(userLocation.lat, userLocation.lng);
-
-    geocoder.coord2Address(coord.getLng(), coord.getLat(), (result, status) => {
-      if (status === kakao.maps.services.Status.OK) {
-        const roadAddress = result[0]?.road_address?.address_name; // 도로명 주소
-        setRoadName(roadAddress || "정보를 가져올 수 없습니다.");
-        console.log(roadName);
-      } else {
-        console.error("도로명 주소 변환 실패:", status);
-        setRoadName("도로명 주소를 가져올 수 없습니다.");
-      }
-    });
-  }, [userLocation]);
   return (
     userLocation && ( // 사용자 위치를 가져온 후에만 지도 표시
       <Map
@@ -78,7 +78,7 @@ export default function KakaoMap() {
           width: "800px",
           height: "1200px",
         }}
-        level={2}
+        level={1}
         onCreate={setMap}
       >
         <MapMarker
