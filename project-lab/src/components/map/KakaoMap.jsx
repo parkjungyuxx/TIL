@@ -9,7 +9,7 @@ export default function KakaoMap() {
   const [markers, setMarkers] = useState([]);
   const [map, setMap] = useState();
   const [userLocation, setUserLocation] = useState(null); // 초기 위치를 null로 설정
-  const [userCurrentDong, setUserCurrentDong] = useState(null);
+  const [roadName, setRoadName] = useState(null);
 
   // 현재 위치 가져오기
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function KakaoMap() {
     if (!map || !userLocation) return;
     const ps = new kakao.maps.services.Places();
 
-    ps.keywordSearch("명일동 동물병원", (data, status) => {
+    ps.keywordSearch("고덕로240 동물병원", (data, status) => {
       if (status === kakao.maps.services.Status.OK) {
         const bounds = new kakao.maps.LatLngBounds();
         const markers = data.map((place) => {
@@ -54,7 +54,23 @@ export default function KakaoMap() {
     });
   }, [map, userLocation]);
 
-  // 지도 렌더링
+  useEffect(() => {
+    if (!userLocation) return;
+
+    const geocoder = new kakao.maps.services.Geocoder();
+    const coord = new kakao.maps.LatLng(userLocation.lat, userLocation.lng);
+
+    geocoder.coord2Address(coord.getLng(), coord.getLat(), (result, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const roadAddress = result[0]?.road_address?.address_name; // 도로명 주소
+        setRoadName(roadAddress || "정보를 가져올 수 없습니다.");
+        console.log(roadName);
+      } else {
+        console.error("도로명 주소 변환 실패:", status);
+        setRoadName("도로명 주소를 가져올 수 없습니다.");
+      }
+    });
+  }, [userLocation]);
   return (
     userLocation && ( // 사용자 위치를 가져온 후에만 지도 표시
       <Map
@@ -84,7 +100,7 @@ export default function KakaoMap() {
             position={marker.position}
             image={{
               src: pin,
-              size: { width: 24, height: 24 },
+              size: { width: 32, height: 32 },
               options: { offset: { x: 32, y: 64 } },
             }}
             onClick={() => setInfo(marker)}
