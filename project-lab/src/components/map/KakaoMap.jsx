@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { MapMarker, Map } from "react-kakao-maps-sdk";
 import dog from "../map/dog.png";
 import pin from "../map/pin.svg";
+import pin2 from "../map/pin2.svg";
+import pin3 from "../map/pin3.svg";
 
 export default function KakaoMap() {
   const [info, setInfo] = useState();
@@ -83,8 +85,8 @@ export default function KakaoMap() {
       >
         <MapMarker
           image={{
-            src: dog,
-            size: { width: 64, height: 64 },
+            src: pin2,  // pin3은 알아보기 힘듬
+            size: { width: "32px", height: "32px" },
             options: { offset: { x: 32, y: 64 } },
           }}
           position={{
@@ -99,7 +101,7 @@ export default function KakaoMap() {
             position={marker.position}
             image={{
               src: pin,
-              size: { width: 32, height: 32 },
+              size: { width: "32px", height: "32px" },
               options: { offset: { x: 32, y: 64 } },
             }}
             onClick={() => setInfo(marker)}
