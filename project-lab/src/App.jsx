@@ -4,6 +4,7 @@ import KakaoMap from "./components/map/KakaoMap";
 function App() {
   return (
     <>
+    
       <KakaoMap />
     </>
   );

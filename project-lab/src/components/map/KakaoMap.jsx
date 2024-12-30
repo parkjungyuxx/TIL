@@ -49,7 +49,7 @@ export default function KakaoMap() {
 
   // 검색 결과로 마커 생성
   useEffect(() => {
-    if (!map || !userLocation) return;
+    if (!map || !userLocation || !roadName) return;
     const ps = new kakao.maps.services.Places();
 
     ps.keywordSearch(`${roadName}동물병원`, (data, status) => {
@@ -70,7 +70,7 @@ export default function KakaoMap() {
         map.setBounds(bounds); // 검색 결과에 맞게 지도 범위 설정
       }
     });
-  }, [map, userLocation]);
+  }, [map, userLocation, roadName]);
 
   return (
     userLocation && ( // 사용자 위치를 가져온 후에만 지도 표시
@@ -85,7 +85,7 @@ export default function KakaoMap() {
       >
         <MapMarker
           image={{
-            src: pin2,  // pin3은 알아보기 힘듬
+            src: pin2, // pin3은 알아보기 힘듬
             size: { width: "32px", height: "32px" },
             options: { offset: { x: 32, y: 64 } },
           }}
