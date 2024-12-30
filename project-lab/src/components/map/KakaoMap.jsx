@@ -68,6 +68,7 @@ export default function KakaoMap() {
 
         setMarkers(markers);
         map.setBounds(bounds); // 검색 결과에 맞게 지도 범위 설정
+        // map.setLevel(1); // 위나 아래 둘중에 하나
       }
     });
   }, [map, userLocation, roadName]);
