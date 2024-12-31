@@ -38,7 +38,10 @@ export default function KakaoMap() {
 
     geocoder.coord2Address(coord.getLng(), coord.getLat(), (result, status) => {
       if (status === kakao.maps.services.Status.OK) {
-        const roadAddress = result[0].road_address.address_name; // 도로명 주소
+        const roadAddress = result[0].road_address
+          ? result[0].road_address.address_name
+          : "";
+        // 도로명 주소
         setRoadName(roadAddress || "");
         console.log(roadName);
       } else {
@@ -49,10 +52,13 @@ export default function KakaoMap() {
 
   // 검색 결과로 마커 생성
   useEffect(() => {
-    if (!map || !userLocation || !roadName) return;
+    if (!map || !userLocation) return;
     const ps = new kakao.maps.services.Places();
 
-    ps.keywordSearch(`${roadName}동물병원`, (data, status) => {
+    // `roadName`이 없으면 기본 검색어로 "동물병원"만 사용
+    const searchKeyword = roadName ? `${roadName} 동물병원` : "고덕역 동물병원";
+
+    ps.keywordSearch(searchKeyword, (data, status) => {
       if (status === kakao.maps.services.Status.OK) {
         const bounds = new kakao.maps.LatLngBounds();
         const markers = data.map((place) => {
@@ -67,8 +73,12 @@ export default function KakaoMap() {
         });
 
         setMarkers(markers);
-        map.setBounds(bounds); // 검색 결과에 맞게 지도 범위 설정
-        // map.setLevel(1); // 위나 아래 둘중에 하나
+        // map.setBounds(bounds); // 검색 결과에 맞게 지도 범위 설정
+        map.setLevel(3);
+        console.log("검색 결과 마커:", markers);
+      } else {
+        console.error("검색 결과 없음");
+        setMarkers([]); // 검색 실패 시 마커 초기화
       }
     });
   }, [map, userLocation, roadName]);
@@ -87,7 +97,7 @@ export default function KakaoMap() {
         <MapMarker
           image={{
             src: pin2, // pin3은 알아보기 힘듬
-            size: { width: "32px", height: "32px" },
+            size: { width: 32, height: 32 },
             options: { offset: { x: 32, y: 64 } },
           }}
           position={{
@@ -102,7 +112,7 @@ export default function KakaoMap() {
             position={marker.position}
             image={{
               src: pin,
-              size: { width: "32px", height: "32px" },
+              size: { width: 64, height: 64 }, //
               options: { offset: { x: 32, y: 64 } },
             }}
             onClick={() => setInfo(marker)}
