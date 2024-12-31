@@ -56,7 +56,7 @@ export default function KakaoMap() {
     const ps = new kakao.maps.services.Places();
 
     // `roadName`이 없으면 기본 검색어로 "동물병원"만 사용
-    const searchKeyword = roadName ? `${roadName} 동물병원` : "고덕역 동물병원";
+    const searchKeyword = roadName ? `${roadName} 동물병원` : "동물병원";
 
     ps.keywordSearch(searchKeyword, (data, status) => {
       if (status === kakao.maps.services.Status.OK) {
