@@ -1,16 +1,14 @@
-import api from "./apiInstance"; // Axios Instance 가져오기
+import apiInstance from './apiInstance';
 
-// 로그인 API 요청
-export const login = async (id, password) => {
+export const login = async (userId, pw) => {
   try {
-    const response = await api.post("/login", {
-      id,
-      password,
+    const response = await apiInstance.post('/login', {
+      userId,
+      pw,
     });
-
-    return response.data; // 서버 응답 데이터 반환
+    return response.data;
   } catch (error) {
-    console.error("Login API Error:", error.response?.data || error.message);
+    console.error('Login failed:', error);
     throw error;
   }
 };
