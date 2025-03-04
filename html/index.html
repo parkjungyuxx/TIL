@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Til</title>
+    <style>
+      td {
+        width: 100px;
+        height: 30px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 주석 키 : command + / -->
+    <!-- 제목 -->
+    <h1>페이지에서 가장 중요한 제목 : logo</h1>
+    <h2>제목: GNB나 컨텐츠 타이틀</h2>
+    <h3>제목: 컨텐츠 타이틀</h3>
+    <h4>제목: 컨텐츠 타이틀</h4>
+    <h5>제목: 컨텐츠 타이틀</h5>
+    <h6>제목: 컨텐츠 타이틀</h6>
+    <!-- 순서가 없는 목록, 순서가 있는 목록, 용어정의 목록 -->
+    <ul>
+      <li>네이버</li>
+      <li>다음</li>
+      <li>구글</li>
+    </ul>
+    <ol>
+      <li>삼성</li>
+      <li>엘지</li>
+      <li>롯데</li>
+    </ol>
+    <dl>
+      <dt>웹표준</dt>
+      <dd>어느 기기에서든 웹을 사용하게</dd>
+    </dl>
+    <!-- 문단, 줄바꿈 -->
+    <p>문단 태그입니다</p>
+    <p>
+      문단 태그 <br />
+      입니다
+    </p>
+    <!-- 이미지 -->
+    <img
+      src="./assets/201915029_1280.jpg"
+      alt="토트넘 사진"
+      width="320px"
+      height="240px"
+    />
+    <img
+      src="./assets/201915029_1280.jpg"
+      alt="토트넘 사진"
+      width="320px"
+      height="240px"
+    />
+    <!-- a태그 target = _blanck (새창) -->
+    <a href="https://www.naver.com" title="새창열림" target="_blank">네이버</a>
+    <!-- 블록영역 / 인라인 영역 -->
+    <div>블록형태로 그룹화</div>
+    <div>인라인형태로 그룹화</div>
+    <!-- table summary 있을수도 있고 없을수도 있다 -->
+    <table>
+      <caption>
+        취업 현황
+      </caption>
+      <colgroup>
+        <col width="100px" />
+        <col width="100px" />
+        <col width="100px" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col">구분</th>
+          <th id="wd" scope="col">웹디자이너</th>
+          <th id="fe" scope="col">프론트엔드</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th id="total" scope="row">합계</th>
+          <td headers="wd total">20명</td>
+          <td headers="fe total">30명</td>
+        </tr>
+      </tfoot>
+      <tbody>
+        <tr>
+          <th id="j1" scope="row">1월 취업현황</th>
+          <td headers="wd j1">10명</td>
+          <td headers="fe j1">10명</td>
+        </tr>
+        <tr>
+          <th id="j2" scope="row">2월 취업현황</th>
+          <td headers="wd j2">10명</td>
+          <td headers="fe j2">20명</td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- 셀병함 colspan, rowspan -->
+    <table>
+      <tr>
+        <td colspan="2">1</td>
+        <td rowspan="2">2</td>
+        <!-- <td>3</td> -->
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>5</td>
+        <!-- <td>6</td> -->
+      </tr>
+    </table>
+
+    <!-- form -->
+    <form action="" method="post" name="frm">
+      <fieldset>
+        <legend>요소확인</legend>
+        <label for="user_name">이름</label>
+        <input type="text" id="user_name" name="user_name" /><br />
+
+        <label for="user_pw">비밀번호</label>
+        <input
+          type="password"
+          id="user_pw"
+          name="user_pw"
+          maxlength="9"
+        /><br />
+
+        <input type="checkbox" id="user_check1" name="check" />
+        <label for="user_check1">삼성</label>
+
+        <input type="checkbox" id="user_check2" name="check" />
+        <label for="user_check2">엘지</label> <br />
+
+        <input type="radio" id="user_radio1" name="radio" />
+        <label for="user_radio1">웹디자이너</label>
+
+        <input type="radio" id="user_radio2" name="radio" />
+        <label for="user_radio2">프론트엔드</label>
+
+        <input type="radio" id="user_radio3" name="radio" />
+        <label for="user_radio3">백엔드</label> <br />
+
+        <label for="user_file">첨부파일</label>
+        <input type="file" id="user_file" name="user_file" /> <br />
+
+        <label for="user_search">수강과목 검색</label>
+        <input type="search" id="user_search" name="user_search" /> <br />
+
+        <label for="user_tel">전화번호</label>
+        <input type="tel" id="user_tel" name="user_tel" /> <br />
+
+        <label for="user_url">홈페이지</label>
+        <input type="url" id="user_url" name="user_url" /> <br />
+
+        <label for="user_email">이메일</label>
+        <input type="email" id="user_email" name="user_email" /> <br />
+
+        <label for="mm">희망수강월</label>
+        <input type="month" id="mm" name="mm" /> <br />
+
+        <label for="dd">희망수강일</label>
+        <input type="date" id="dd" name="dd" /> <br />
+
+        <label for="ww">희망수강주</label>
+        <input type="week" id="ww" name="ww" /> <br />
+
+        <label for="tt">희망시간</label>
+        <input type="time" id="tt" name="tt"/ > <br />
+
+        <label for="user_number">강의신청 수</label>
+        <input
+          type="number"
+          id="user_number"
+          name="user_number"
+          min="0"
+          max="15"
+          step="3"
+        />
+        <br />
+
+        <label for="user_color">색상표</label>
+        <input type="color" id="user_color" name="user_color" /> <br />
+
+        <label for="user_range">강의 수준</label>
+        <input
+          type="range"
+          id="user_range"
+          name="user_range"
+          min="0"
+          max="10"
+        />
+        <br />
+
+        <input
+          type="text"
+          name="user_id"
+          title="아이디"
+          placeholder="아이디를 입력해주세요"
+        />
+        <br />
+        <input
+          type="text"
+          name="user_id2"
+          title="아이디2"
+          value="아이디를 입력해주세요"
+        />
+        <br />
+
+        <label for="user_select">패밀리사이트 선택</label>
+        <select name="user_select" id="user_select">
+          <option value="">강남보건소</option>
+          <option value="">강남구의회</option>
+          <option value="">강남시청</option>
+        </select>
+        <button>선택</button> <br />
+
+        <label for="frm_select">산하부서 선택</label>
+        <select name="frm_select" id="frm_select">
+          <optgroup label="행정지원국">
+            <option value="">총무과</option>
+            <option value="">기획예산과</option>
+            <option value="">재무과</option>
+          </optgroup>
+          <optgroup label="문화관광국">
+            <option value="">문화과</option>
+            <option value="">홍보과</option>
+            <option value="">지원과</option>
+          </optgroup>
+        </select>
+        <input type="button" name="btn" value="바로가기" /> <br />
+
+        <label for="text_araea">구매후기</label>
+        <textarea
+          rows="10"
+          cols="50"
+          name="text_araea"
+          id="text_araea"
+        ></textarea>
+        <input type="image" src="이미지파일명" alt="등록" title="등록" />
+        <input type="submit" name="submit_btn" value="전송" />
+        <input type="reset" name="submit_btn" value="취소" /> <br />
+      </fieldset>
+      <!-- 강조, 중요 -->
+      <strong>중요하다 라는 의미에 적용</strong>
+      <em>강조의 의미</em>
+      <!-- 주소 또는 관리자 -->
+      <address>주소, 사이트 관리자 연락처</address>
+      <!-- 툴팁 -->
+      <p>
+        이 책을 내용은 <abbr title="internet explore11">ie11</abbr>이상에서 지원
+        가능한 코드로 작성 되었습니다
+      </p>
+
+      <!-- 머리말, 바닥글 -->
+      <header>페이지나 섹션의 머리말(로고, 목차, 내비게이션, 검색폼...)</header>
+      <footer>
+        페이지나 섹션의 바닥글(저자정보, 관련페이지링크, 저작권표시...)
+      </footer>
+
+      <!-- 컨텐츠 그룹 -->
+      <section>장이나 절을 표현, 제목 태그를 넣어야 한다</section>
+      <article>
+        뉴스기사, 블로그 기사처럼 독립적인 컨텐츠(댓글, 게시판 투고...)
+      </article>
+      <aside>
+        메인 컨텐츠와 관련성이 적은 컨텐츠(광고, 블로그 사이드바, 보충기사...)
+      </aside>
+      <nav>
+        컨텐츠의 주메뉴, 서브페이지의 사이드 메뉴, 사이트내 이동하는 주요
+        네비게이션에 표현
+      </nav>
+
+      <!-- 이미지 -->
+      <figure>
+        <img
+          src="./assets/201915029_1280.jpg"
+          alt="토트넘"
+          style="width: 320px; height: 240px"
+        />
+        <figcaption>토트넘 로고</figcaption>
+      </figure>
+      <br />
+
+      <!-- 비디오, 오디오 -->
+      <video
+        src="./assets/곰세마리.mp4"
+        height="240px"
+        width="400px"
+        loop
+        controls
+      ></video>
+      <br />
+      <audio src="./assets/도깨비.mp3" width="300px" controls></audio> <br />
+
+      <!-- 작은 주석 -->
+      <small>법적제약, 저작권, 면책사항, 작은주석, 세목을 표현</small> <br />
+
+      <!-- s, cite, q, blockquote, i, b, u 가끔 보이는 애들 -->
+      <s>더이상 정확하지 않거나 관련성이 적다</s> <br />
+      <cite>인용하는 작폼의 제목(인명, 인용문장은 사용하면 안된다)</cite> <br />
+      <q>짧은 인용글</q> <br />
+      <blockquote>긴 인용글</blockquote>
+      <br />
+      <i>목소리, 감정, 학명, 전문용어, 본문과는 다른 언어표기, 사고, 배</i>
+      <br />
+      <b>다른 문장과 구별(키워드, 제품명, 기사 리드문)</b> <br />
+      <u>본문 표기와는 다른 형태</u> <br />
+
+      <form action="#" method="post">
+        <input list="browsers" name="browsers" />
+        <datalist id="browsers">
+          <option value="Internet explore"></option>
+          <option value="firefox"></option>
+          <option value="chrome"></option>
+        </datalist>
+      </form>
+    </form>
+  </body>
+</html>
