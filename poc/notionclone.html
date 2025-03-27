@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>노션 스타일 문서 편집기</title>
+  <style>
+    /* 기본 스타일 초기화 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    /* 레이아웃 구성 */
+    .app-container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      background-color: #ffffff;
+    }
+
+    /* 왼쪽 사이드바 */
+    .left-sidebar {
+      width: 250px;
+      height: 100%;
+      background-color: #f7f7f7;
+      border-right: 1px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    .workspace-header {
+      padding: 16px;
+      font-weight: bold;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .documents-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .document-item {
+      padding: 8px 12px;
+      margin-bottom: 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .document-item:hover {
+      background-color: #eee;
+    }
+
+    .document-item.active {
+      background-color: #e1e1e1;
+    }
+
+    .delete-doc-btn {
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-size: 12px;
+      color: #999;
+      cursor: pointer;
+    }
+
+    .document-item:hover .delete-doc-btn {
+      opacity: 1;
+    }
+
+    .add-document-btn {
+      margin: 16px;
+      padding: 8px;
+      background-color: #f7f7f7;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.2s;
+    }
+
+    .add-document-btn:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* 메인 컨텐츠 영역 */
+    .main-content {
+      flex: 1;
+      height: 100%;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .editor-container {
+      flex: 1;
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #666;
+    }
+
+    .empty-state h2 {
+      margin-bottom: 20px;
+    }
+
+    .create-doc-btn {
+      padding: 10px 20px;
+      background-color: #2d7ff9;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .create-doc-btn:hover {
+      background-color: #1a6be1;
+    }
+
+    .document-title {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      padding: 5px;
+      border-radius: 4px;
+      outline: none;
+      border: 1px solid transparent;
+    }
+
+    .document-title:hover, .document-title:focus {
+      border-color: #e0e0e0;
+    }
+
+    .document-content {
+      min-height: 300px;
+      font-size: 16px;
+      line-height: 1.6;
+      padding: 5px;
+      border-radius: 4px;
+      outline: none;
+      border: 1px solid transparent;
+    }
+
+    .document-content:hover, .document-content:focus {
+      border-color: #e0e0e0;
+    }
+
+    /* 오른쪽 사이드바 */
+    .right-sidebar {
+      width: 300px;
+      height: 100%;
+      background-color: #f7f7f7;
+      border-left: 1px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    .task-header {
+      padding: 16px;
+      font-weight: bold;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .task-section {
+      margin: 16px;
+    }
+
+    .task-section-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #666;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      background-color: #fff;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .task-checkbox {
+      margin-right: 8px;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .task-text {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .task-text.completed {
+      text-decoration: line-through;
+      color: #777;
+    }
+
+    .task-delete {
+      color: #999;
+      cursor: pointer;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .task-item:hover .task-delete {
+      opacity: 1;
+    }
+
+    .add-task-btn {
+      margin-top: 16px;
+      padding: 8px;
+      background-color: #f7f7f7;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.2s;
+    }
+
+    .add-task-btn:hover {
+      background-color: #e0e0e0;
+    }
+
+    .add-task-input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      margin-top: 8px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .add-task-input.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- 왼쪽 사이드바 -->
+    <div class="left-sidebar">
+      <div class="workspace-header">내 워크스페이스</div>
+      <div class="documents-container" id="documents-container">
+        <!-- 문서 목록이 여기에 동적으로 생성됩니다 -->
+      </div>
+      <div class="add-document-btn" id="add-document-btn">+ 새 문서</div>
+    </div>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <div class="main-content" id="main-content">
+      <!-- 비어있는 상태 메시지 -->
+      <div class="empty-state" id="empty-state">
+        <h2>문서가 없습니다</h2>
+        <button class="create-doc-btn" id="create-doc-btn">문서 생성하기</button>
+      </div>
+
+      <!-- 에디터 컨테이너 -->
+      <div class="editor-container" id="editor-container" style="display: none;">
+        <div class="document-title" id="document-title" contenteditable="true" data-placeholder="제목 없음"></div>
+        <div class="document-content" id="document-content" contenteditable="true" data-placeholder="여기에 내용을 입력하세요..."></div>
+      </div>
+    </div>
+
+    <!-- 오른쪽 사이드바 -->
+    <div class="right-sidebar">
+      <div class="task-header">할 일 관리</div>
+
+      <!-- 할 일 섹션 -->
+      <div class="task-section">
+        <div class="task-section-title">할 일</div>
+        <div class="task-list" id="todo-list">
+          <!-- 할 일 항목이 여기에 동적으로 생성됩니다 -->
+        </div>
+        <div class="add-task-btn" id="add-task-btn">+ 새 할 일</div>
+        <input type="text" class="add-task-input" id="add-task-input" placeholder="할 일을 입력하세요...">
+      </div>
+
+      <!-- 완료된 일 섹션 -->
+      <div class="task-section">
+        <div class="task-section-title">완료된 일</div>
+        <div class="task-list" id="completed-list">
+          <!-- 완료된 일 항목이 여기에 동적으로 생성됩니다 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 애플리케이션 상태 관리
+    const appState = {
+      documents: [],
+      tasks: [],
+      activeDocumentId: null
+    };
+
+    // DOM 요소
+    const documentsContainer = document.getElementById('documents-container');
+    const addDocumentBtn = document.getElementById('add-document-btn');
+    const emptyState = document.getElementById('empty-state');
+    const createDocBtn = document.getElementById('create-doc-btn');
+    const editorContainer = document.getElementById('editor-container');
+    const documentTitle = document.getElementById('document-title');
+    const documentContent = document.getElementById('document-content');
+    const todoList = document.getElementById('todo-list');
+    const completedList = document.getElementById('completed-list');
+    const addTaskBtn = document.getElementById('add-task-btn');
+    const addTaskInput = document.getElementById('add-task-input');
+
+    // 초기화 함수
+    function init() {
+      loadFromLocalStorage();
+      renderDocuments();
+      renderTasks();
+      checkEmptyState();
+      addEventListeners();
+    }
+
+    // 로컬 스토리지에서 데이터 로드
+    function loadFromLocalStorage() {
+      const savedDocuments = localStorage.getItem('notion_clone_documents');
+      const savedTasks = localStorage.getItem('notion_clone_tasks');
+      const savedActiveDocumentId = localStorage.getItem('notion_clone_active_document_id');
+
+      if (savedDocuments) {
+        appState.documents = JSON.parse(savedDocuments);
+      }
+
+      if (savedTasks) {
+        appState.tasks = JSON.parse(savedTasks);
+      }
+
+      if (savedActiveDocumentId) {
+        appState.activeDocumentId = savedActiveDocumentId;
+      }
+    }
+
+    // 로컬 스토리지에 데이터 저장
+    function saveToLocalStorage() {
+      localStorage.setItem('notion_clone_documents', JSON.stringify(appState.documents));
+      localStorage.setItem('notion_clone_tasks', JSON.stringify(appState.tasks));
+      localStorage.setItem('notion_clone_active_document_id', appState.activeDocumentId);
+    }
+
+    // 빈 상태 체크
+    function checkEmptyState() {
+      if (appState.documents.length === 0) {
+        emptyState.style.display = 'flex';
+        editorContainer.style.display = 'none';
+      } else {
+        emptyState.style.display = 'none';
+        
+        if (appState.activeDocumentId) {
+          editorContainer.style.display = 'block';
+          loadDocument(appState.activeDocumentId);
+        } else if (appState.documents.length > 0) {
+          // 활성 문서가 없지만 문서가 있는 경우 첫 번째 문서 활성화
+          appState.activeDocumentId = appState.documents[0].id;
+          loadDocument(appState.activeDocumentId);
+          editorContainer.style.display = 'block';
+        }
+      }
+    }
+
+    // 이벤트 리스너 추가
+    function addEventListeners() {
+      // 새 문서 버튼 클릭
+      addDocumentBtn.addEventListener('click', createNewDocument);
+      createDocBtn.addEventListener('click', createNewDocument);
+
+      // 문서 제목 및 내용 변경 감지
+      documentTitle.addEventListener('input', saveActiveDocument);
+      documentContent.addEventListener('input', saveActiveDocument);
+
+      // 할 일 추가 버튼 및 입력창
+      addTaskBtn.addEventListener('click', () => {
+        addTaskInput.classList.add('active');
+        addTaskInput.focus();
+      });
+
+      addTaskInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && addTaskInput.value.trim()) {
+          createNewTask(addTaskInput.value.trim());
+          addTaskInput.value = '';
+          addTaskInput.classList.remove('active');
+        } else if (e.key === 'Escape') {
+          addTaskInput.value = '';
+          addTaskInput.classList.remove('active');
+        }
+      });
+
+      // 문서 포커스 이벤트 처리
+      documentTitle.addEventListener('focus', () => {
+        if (documentTitle.textContent === '제목 없음') {
+          documentTitle.textContent = '';
+        }
+      });
+
+      documentTitle.addEventListener('blur', () => {
+        if (!documentTitle.textContent.trim()) {
+          documentTitle.textContent = '제목 없음';
+        }
+      });
+
+      documentContent.addEventListener('focus', () => {
+        if (documentContent.textContent === '여기에 내용을 입력하세요...') {
+          documentContent.textContent = '';
+        }
+      });
+
+      documentContent.addEventListener('blur', () => {
+        if (!documentContent.textContent.trim()) {
+          documentContent.textContent = '여기에 내용을 입력하세요...';
+        }
+      });
+    }
+
+    // 새 문서 생성
+    function createNewDocument() {
+      const newDocument = {
+        id: Date.now().toString(),
+        title: '제목 없음',
+        content: '여기에 내용을 입력하세요...',
+        createdAt: new Date().toISOString()
+      };
+
+      appState.documents.push(newDocument);
+      appState.activeDocumentId = newDocument.id;
+      
+      saveToLocalStorage();
+      renderDocuments();
+      loadDocument(newDocument.id);
+      
+      emptyState.style.display = 'none';
+      editorContainer.style.display = 'block';
+    }
+
+    // 문서 삭제
+    function deleteDocument(id, event) {
+      event.stopPropagation();
+      
+      if (confirm('정말로 이 문서를 삭제하시겠습니까?')) {
+        appState.documents = appState.documents.filter(doc => doc.id !== id);
+        
+        if (appState.activeDocumentId === id) {
+          if (appState.documents.length > 0) {
+            appState.activeDocumentId = appState.documents[0].id;
+            loadDocument(appState.documents[0].id);
+          } else {
+            appState.activeDocumentId = null;
+            checkEmptyState();
+          }
+        }
+        
+        saveToLocalStorage();
+        renderDocuments();
+        checkEmptyState();
+      }
+    }
+
+    // 문서 목록 렌더링
+    function renderDocuments() {
+      documentsContainer.innerHTML = '';
+      
+      appState.documents.forEach(doc => {
+        const docElement = document.createElement('div');
+        docElement.className = `document-item ${doc.id === appState.activeDocumentId ? 'active' : ''}`;
+        docElement.innerHTML = `
+          <span>${doc.title === '제목 없음' || !doc.title ? '제목 없음' : doc.title}</span>
+          <span class="delete-doc-btn">삭제</span>
+        `;
+        
+        docElement.addEventListener('click', () => {
+          appState.activeDocumentId = doc.id;
+          saveToLocalStorage();
+          loadDocument(doc.id);
+          renderDocuments(); // 활성 상태 업데이트
+        });
+        
+        const deleteBtn = docElement.querySelector('.delete-doc-btn');
+        deleteBtn.addEventListener('click', (e) => deleteDocument(doc.id, e));
+        
+        documentsContainer.appendChild(docElement);
+      });
+    }
+
+    // 문서 불러오기
+    function loadDocument(id) {
+      const doc = appState.documents.find(doc => doc.id === id);
+      
+      if (doc) {
+        documentTitle.textContent = doc.title;
+        documentContent.textContent = doc.content;
+        
+        emptyState.style.display = 'none';
+        editorContainer.style.display = 'block';
+      }
+    }
+
+    // 활성 문서 저장
+    function saveActiveDocument() {
+      if (!appState.activeDocumentId) return;
+      
+      const index = appState.documents.findIndex(doc => doc.id === appState.activeDocumentId);
+      
+      if (index !== -1) {
+        appState.documents[index].title = documentTitle.textContent;
+        appState.documents[index].content = documentContent.textContent;
+        
+        saveToLocalStorage();
+        renderDocuments(); // 제목 변경이 목록에 반영되도록
+      }
+    }
+
+    // 새 할 일 생성
+    function createNewTask(text) {
+      const newTask = {
+        id: Date.now().toString(),
+        text: text,
+        completed: false,
+        createdAt: new Date().toISOString()
+      };
+      
+      appState.tasks.push(newTask);
+      saveToLocalStorage();
+      renderTasks();
+    }
+
+    // 할 일 삭제
+    function deleteTask(id) {
+      appState.tasks = appState.tasks.filter(task => task.id !== id);
+      saveToLocalStorage();
+      renderTasks();
+    }
+
+    // 할 일 상태 토글
+    function toggleTaskStatus(id) {
+      const index = appState.tasks.findIndex(task => task.id === id);
+      
+      if (index !== -1) {
+        appState.tasks[index].completed = !appState.tasks[index].completed;
+        saveToLocalStorage();
+        renderTasks();
+      }
+    }
+
+    // 할 일 목록 렌더링
+    function renderTasks() {
+      todoList.innerHTML = '';
+      completedList.innerHTML = '';
+      
+      appState.tasks.forEach(task => {
+        const taskElement = document.createElement('div');
+        taskElement.className = 'task-item';
+        taskElement.innerHTML = `
+          <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+          <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+          <div class="task-delete">삭제</div>
+        `;
+        
+        const checkbox = taskElement.querySelector('.task-checkbox');
+        checkbox.addEventListener('change', () => toggleTaskStatus(task.id));
+        
+        const deleteBtn = taskElement.querySelector('.task-delete');
+        deleteBtn.addEventListener('click', () => deleteTask(task.id));
+        
+        if (task.completed) {
+          completedList.appendChild(taskElement);
+        } else {
+          todoList.appendChild(taskElement);
+        }
+      });
+    }
+
+    // 애플리케이션 초기화
+    init();
+  </script>
+</body>
+</html>
