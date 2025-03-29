@@ -3,9 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>노션 스타일 문서 편집기</title>
+  <title>일정 관리 툴</title>
   <style>
-    /* 기본 스타일 초기화 */
+    /* ===== 기본 스타일 및 변수 정의 ===== */
+    :root {
+      /* 라이트 모드 */
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F5F5F5;
+      --bg-tertiary: #E8E8E8;
+      --text-primary: #333333;
+      --text-secondary: #666666;
+      --accent-color: #50C878;
+      --border-color: #DDDDDD;
+      --hover-bg: #EFEFEF;
+      --item-hover: rgba(0, 0, 0, 0.05);
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --modal-bg: #FFFFFF;
+    }
+
+    [data-theme="dark"] {
+      /* 다크 모드 */
+      --bg-primary: #1C1C1C;
+      --bg-secondary: #252525;
+      --bg-tertiary: #333333;
+      --text-primary: #EEEEEE;
+      --text-secondary: #AAAAAA;
+      --hover-bg: #303030;
+      --item-hover: rgba(255, 255, 255, 0.1);
+      --border-color: #444444;
+      --modal-bg: #252525;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -14,103 +42,245 @@
     }
 
     body {
-      overflow: hidden;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s, color 0.3s;
       height: 100vh;
+      overflow: hidden;
     }
 
-    /* 레이아웃 구성 */
+    button {
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+    }
+
+    .btn {
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    input, textarea {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--accent-color);
+    }
+
+    /* ===== 레이아웃 ===== */
     .app-container {
       display: flex;
       height: 100vh;
-      width: 100vw;
-      background-color: #ffffff;
     }
 
-    /* 왼쪽 사이드바 */
+    /* ===== 왼쪽 사이드바 ===== */
     .left-sidebar {
       width: 250px;
       height: 100%;
-      background-color: #f7f7f7;
-      border-right: 1px solid #e0e0e0;
+      background-color: var(--bg-secondary);
       display: flex;
       flex-direction: column;
-      user-select: none;
+      border-right: 1px solid var(--border-color);
+      transition: background-color 0.3s;
     }
 
-    .workspace-header {
-      padding: 16px;
+    .sidebar-header {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
       font-weight: bold;
-      border-bottom: 1px solid #e0e0e0;
+      color: var(--accent-color);
     }
 
-    .documents-container {
+    .workspace-section {
       flex: 1;
-      overflow-y: auto;
       padding: 10px;
+      overflow-y: auto;
     }
 
-    .document-item {
+    .add-page-btn {
+      display: flex;
+      align-items: center;
       padding: 8px 12px;
-      margin-bottom: 4px;
+      margin-bottom: 12px;
       border-radius: 4px;
-      cursor: pointer;
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
       font-size: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .add-page-btn:hover {
+      background-color: var(--hover-bg);
+    }
+
+    .add-page-btn i {
+      margin-right: 8px;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 30px;
+      border-radius: 4px;
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: none;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+    }
+
+    .docs-list {
+      list-style-type: none;
+    }
+
+    .doc-item {
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .doc-item:hover {
+      background-color: var(--item-hover);
+    }
+
+    .doc-title {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .doc-options {
+      opacity: 0;
+      transition: opacity 0.2s;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    .doc-item:hover .doc-options {
+      opacity: 1;
+    }
+
+    .doc-item.active {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    .doc-item.active .doc-options {
+      color: white;
+    }
+
+    .sidebar-footer {
+      padding: 15px;
+      border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .document-item:hover {
-      background-color: #eee;
+    .theme-toggle {
+      width: 44px;
+      height: 22px;
+      background-color: var(--bg-tertiary);
+      border-radius: 11px;
+      position: relative;
+      cursor: pointer;
     }
 
-    .document-item.active {
-      background-color: #e1e1e1;
+    .theme-toggle-knob {
+      width: 18px;
+      height: 18px;
+      background-color: var(--accent-color);
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s;
     }
 
-    .delete-doc-btn {
-      opacity: 0;
-      transition: opacity 0.2s;
+    .theme-toggle[data-theme="dark"] .theme-toggle-knob {
+      transform: translateX(22px);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: var(--accent-color);
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
       font-size: 12px;
-      color: #999;
+    }
+
+    .trash-btn {
+      color: var(--text-secondary);
       cursor: pointer;
+      margin-right: 10px;
     }
 
-    .document-item:hover .delete-doc-btn {
-      opacity: 1;
-    }
-
-    .add-document-btn {
-      margin: 16px;
-      padding: 8px;
-      background-color: #f7f7f7;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
-      cursor: pointer;
-      text-align: center;
-      transition: background-color 0.2s;
-    }
-
-    .add-document-btn:hover {
-      background-color: #e0e0e0;
-    }
-
-    /* 메인 컨텐츠 영역 */
+    /* ===== 중앙 콘텐츠 영역 ===== */
     .main-content {
       flex: 1;
-      height: 100%;
+      height: 100vh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       position: relative;
-    }
-
-    .editor-container {
-      flex: 1;
-      padding: 40px;
-      max-width: 800px;
-      margin: 0 auto;
-      width: 100%;
+      padding: 20px;
     }
 
     .empty-state {
@@ -119,333 +289,768 @@
       align-items: center;
       justify-content: center;
       height: 100%;
-      color: #666;
+      padding: 20px;
+      text-align: center;
     }
 
-    .empty-state h2 {
-      margin-bottom: 20px;
+    .empty-state h1 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: var(--text-primary);
     }
 
-    .create-doc-btn {
-      padding: 10px 20px;
-      background-color: #2d7ff9;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+    .empty-state p {
       font-size: 16px;
+      max-width: 500px;
+      margin-bottom: 24px;
+      color: var(--text-secondary);
     }
 
-    .create-doc-btn:hover {
-      background-color: #1a6be1;
+    .editor-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
     .document-title {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: bold;
-      margin-bottom: 20px;
-      padding: 5px;
-      border-radius: 4px;
-      outline: none;
-      border: 1px solid transparent;
-    }
-
-    .document-title:hover, .document-title:focus {
-      border-color: #e0e0e0;
+      padding: 8px 0;
+      margin-bottom: 16px;
+      border: none;
+      background: transparent;
+      width: 100%;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .document-content {
-      min-height: 300px;
+      flex: 1;
+      padding: 8px 0;
       font-size: 16px;
       line-height: 1.6;
-      padding: 5px;
-      border-radius: 4px;
-      outline: none;
-      border: 1px solid transparent;
+      color: var(--text-primary);
+      background: transparent;
+      border: none;
+      resize: none;
     }
 
-    .document-content:hover, .document-content:focus {
-      border-color: #e0e0e0;
+    /* ===== 오른쪽 사이드바 ===== */
+    .right-sidebar-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: pointer;
+      z-index: 10;
     }
 
-    /* 오른쪽 사이드바 */
+    .right-sidebar-collapsed {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 60px;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 80px;
+      border-left: 1px solid var(--border-color);
+      transition: transform 0.3s ease;
+    }
+
+    .todo-indicator {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--bg-tertiary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      position: relative;
+    }
+
+    .todo-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: var(--accent-color);
+      color: white;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .right-sidebar {
       width: 300px;
       height: 100%;
-      background-color: #f7f7f7;
-      border-left: 1px solid #e0e0e0;
+      background-color: var(--bg-secondary);
       display: flex;
       flex-direction: column;
-      user-select: none;
+      transition: transform 0.3s ease;
+      border-left: 1px solid var(--border-color);
     }
 
-    .task-header {
-      padding: 16px;
-      font-weight: bold;
-      border-bottom: 1px solid #e0e0e0;
-    }
-
-    .task-section {
-      margin: 16px;
-    }
-
-    .task-section-title {
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #666;
-    }
-
-    .task-list {
+    .sidebar-right-header {
+      padding: 20px;
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .task-item {
-      display: flex;
+      justify-content: space-between;
       align-items: center;
-      padding: 8px;
-      background-color: #fff;
-      border-radius: 4px;
-      border: 1px solid #e0e0e0;
     }
 
-    .task-checkbox {
-      margin-right: 8px;
-      width: 16px;
-      height: 16px;
+    .sidebar-title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .close-sidebar {
       cursor: pointer;
+      color: var(--text-secondary);
     }
 
-    .task-text {
+    .todo-section {
       flex: 1;
-      font-size: 14px;
+      padding: 0 20px 20px;
+      overflow-y: auto;
     }
 
-    .task-text.completed {
-      text-decoration: line-through;
-      color: #777;
+    .todo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
     }
 
-    .task-delete {
-      color: #999;
+    .add-todo-btn {
+      color: var(--accent-color);
       cursor: pointer;
-      font-size: 12px;
-      opacity: 0;
-      transition: opacity 0.2s;
     }
 
-    .task-item:hover .task-delete {
-      opacity: 1;
-    }
-
-    .add-task-btn {
-      margin-top: 16px;
-      padding: 8px;
-      background-color: #f7f7f7;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
-      cursor: pointer;
-      text-align: center;
-      transition: background-color 0.2s;
-    }
-
-    .add-task-btn:hover {
-      background-color: #e0e0e0;
-    }
-
-    .add-task-input {
+    .todo-input {
       width: 100%;
-      padding: 8px;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
-      margin-top: 8px;
-      font-size: 14px;
+      margin-bottom: 10px;
       display: none;
     }
 
-    .add-task-input.active {
+    .todo-input.active {
       display: block;
     }
+
+    .todo-list {
+      list-style-type: none;
+    }
+
+    .todo-item {
+      padding: 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      background-color: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .todo-checkbox {
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+      border: 2px solid var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .todo-checkbox.checked {
+      background-color: var(--accent-color);
+    }
+
+    .todo-checkbox.checked::after {
+      content: "✓";
+      color: white;
+      font-size: 12px;
+    }
+
+    .todo-text {
+      flex: 1;
+      color: var(--text-primary);
+    }
+
+    .todo-text.completed {
+      text-decoration: line-through;
+      color: var(--text-secondary);
+    }
+
+    .todo-delete {
+      opacity: 0;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .todo-item:hover .todo-delete {
+      opacity: 1;
+    }
+
+    .memo-section {
+      padding: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .memo-textarea {
+      width: 100%;
+      height: 100px;
+      resize: none;
+    }
+
+    /* ===== 모달 ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s linear 0.25s, opacity 0.25s;
+    }
+
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+      transition-delay: 0s;
+    }
+
+    .modal {
+      background-color: var(--modal-bg);
+      border-radius: 8px;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .modal-close {
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    .modal-content {
+      padding: 20px;
+    }
+
+    .modal-actions {
+      padding: 15px 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .doc-options-modal-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .doc-options-modal-btn:hover {
+      background-color: var(--item-hover);
+    }
+
+    .trash-items {
+      list-style-type: none;
+    }
+
+    .trash-item {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      background-color: var(--bg-tertiary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .trash-item-title {
+      flex: 1;
+      color: var(--text-primary);
+    }
+
+    .trash-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .trash-restore,
+    .trash-delete {
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .trash-restore:hover {
+      color: var(--accent-color);
+    }
+
+    .trash-delete:hover {
+      color: #FF5252;
+    }
+
+    /* ===== 유틸리티 클래스 ===== */
+    .hidden {
+      display: none !important;
+    }
+
+    /* ===== 반응형 스타일 ===== */
+    @media (max-width: 768px) {
+      .left-sidebar {
+        width: 220px;
+      }
+
+      .right-sidebar {
+        width: 250px;
+      }
+    }
   </style>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
   <div class="app-container">
     <!-- 왼쪽 사이드바 -->
     <div class="left-sidebar">
-      <div class="workspace-header">내 워크스페이스</div>
-      <div class="documents-container" id="documents-container">
-        <!-- 문서 목록이 여기에 동적으로 생성됩니다 -->
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-leaf"></i> Scheduler
+        </div>
       </div>
-      <div class="add-document-btn" id="add-document-btn">+ 새 문서</div>
+      <div class="workspace-section">
+        <button class="add-page-btn" id="add-page-btn">
+          <i class="fas fa-plus"></i> 페이지 추가하기
+        </button>
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" id="search-input" placeholder="문서 검색...">
+        </div>
+        <ul class="docs-list" id="docs-list">
+          <!-- 동적으로 문서 목록이 추가됩니다 -->
+        </ul>
+      </div>
+      <div class="sidebar-footer">
+        <div class="theme-toggle" id="theme-toggle">
+          <div class="theme-toggle-knob"></div>
+        </div>
+        <button class="trash-btn" id="trash-btn">
+          <i class="fas fa-trash"></i>
+        </button>
+        <div class="user-profile">
+          <div class="user-avatar">U</div>
+          <div class="user-name">사용자</div>
+        </div>
+      </div>
     </div>
 
-    <!-- 메인 컨텐츠 영역 -->
+    <!-- 중앙 콘텐츠 영역 -->
     <div class="main-content" id="main-content">
-      <!-- 비어있는 상태 메시지 -->
+      <!-- 빈 상태 메시지 -->
       <div class="empty-state" id="empty-state">
-        <h2>문서가 없습니다</h2>
-        <button class="create-doc-btn" id="create-doc-btn">문서 생성하기</button>
+        <h1>문서 관리 및 일정 관리를 시작하세요</h1>
+        <p>왼쪽에서 문서를 생성하고 관리하며, 오른쪽 사이드바에서 할 일 목록을 관리할 수 있습니다.</p>
+        <button class="btn btn-primary" id="create-doc-btn">문서 만들기</button>
       </div>
 
       <!-- 에디터 컨테이너 -->
-      <div class="editor-container" id="editor-container" style="display: none;">
-        <div class="document-title" id="document-title" contenteditable="true" data-placeholder="제목 없음"></div>
-        <div class="document-content" id="document-content" contenteditable="true" data-placeholder="여기에 내용을 입력하세요..."></div>
+      <div class="editor-container hidden" id="editor-container">
+        <input type="text" class="document-title" id="document-title" placeholder="제목 없음">
+        <textarea class="document-content" id="document-content" placeholder="여기에 내용을 입력하세요..."></textarea>
+      </div>
+
+      <!-- 오른쪽 사이드바 토글 버튼 -->
+      <button class="right-sidebar-toggle" id="sidebar-toggle">
+        <i class="fas fa-chevron-left" id="sidebar-toggle-icon"></i>
+      </button>
+    </div>
+
+    <!-- 오른쪽 사이드바 (축소 상태) -->
+    <div class="right-sidebar-collapsed hidden" id="sidebar-collapsed">
+      <div class="todo-indicator" id="todo-collapsed-btn">
+        <i class="fas fa-check"></i>
+        <div class="todo-count" id="todo-count-collapsed">0</div>
       </div>
     </div>
 
     <!-- 오른쪽 사이드바 -->
-    <div class="right-sidebar">
-      <div class="task-header">할 일 관리</div>
-
-      <!-- 할 일 섹션 -->
-      <div class="task-section">
-        <div class="task-section-title">할 일</div>
-        <div class="task-list" id="todo-list">
-          <!-- 할 일 항목이 여기에 동적으로 생성됩니다 -->
-        </div>
-        <div class="add-task-btn" id="add-task-btn">+ 새 할 일</div>
-        <input type="text" class="add-task-input" id="add-task-input" placeholder="할 일을 입력하세요...">
+    <div class="right-sidebar" id="right-sidebar">
+      <div class="sidebar-right-header">
+        <div class="sidebar-title">할 일 목록</div>
+        <button class="close-sidebar" id="close-sidebar">
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
-
-      <!-- 완료된 일 섹션 -->
-      <div class="task-section">
-        <div class="task-section-title">완료된 일</div>
-        <div class="task-list" id="completed-list">
-          <!-- 완료된 일 항목이 여기에 동적으로 생성됩니다 -->
+      <div class="todo-section">
+        <div class="todo-header">
+          <div class="todo-title">할 일 (<span id="todo-count">0</span>)</div>
+          <button class="add-todo-btn" id="add-todo-btn">
+            <i class="fas fa-plus"></i>
+          </button>
         </div>
+        <input type="text" class="todo-input" id="todo-input" placeholder="할 일 입력...">
+        <ul class="todo-list" id="todo-list">
+          <!-- 동적으로 할 일 항목이 추가됩니다 -->
+        </ul>
+      </div>
+      <div class="memo-section">
+        <textarea class="memo-textarea" id="memo-textarea" placeholder="메모를 입력하세요..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 문서 옵션 모달 -->
+  <div class="modal-overlay" id="doc-options-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">문서 옵션</div>
+        <button class="modal-close" id="doc-options-close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-content">
+        <button class="doc-options-modal-btn" id="rename-btn">
+          <i class="fas fa-edit"></i> 제목 수정
+        </button>
+        <button class="doc-options-modal-btn" id="trash-move-btn">
+          <i class="fas fa-trash"></i> 휴지통으로 이동
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 휴지통 모달 -->
+  <div class="modal-overlay" id="trash-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">휴지통</div>
+        <button class="modal-close" id="trash-modal-close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-content">
+        <ul class="trash-items" id="trash-items">
+          <!-- 동적으로 휴지통 항목이 추가됩니다 -->
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="empty-trash-btn">휴지통 비우기</button>
+        <button class="btn btn-primary" id="trash-modal-close-btn">닫기</button>
       </div>
     </div>
   </div>
 
   <script>
-    // 애플리케이션 상태 관리
+    // 애플리케이션 상태
     const appState = {
       documents: [],
-      tasks: [],
-      activeDocumentId: null
+      trashedDocuments: [],
+      todos: [],
+      activeTodoInput: false,
+      activeDocumentId: null,
+      memo: '',
+      darkMode: false,
+      sidebarOpen: true,
+      activeDocOptionId: null
     };
 
-    // DOM 요소
-    const documentsContainer = document.getElementById('documents-container');
-    const addDocumentBtn = document.getElementById('add-document-btn');
-    const emptyState = document.getElementById('empty-state');
-    const createDocBtn = document.getElementById('create-doc-btn');
-    const editorContainer = document.getElementById('editor-container');
-    const documentTitle = document.getElementById('document-title');
-    const documentContent = document.getElementById('document-content');
-    const todoList = document.getElementById('todo-list');
-    const completedList = document.getElementById('completed-list');
-    const addTaskBtn = document.getElementById('add-task-btn');
-    const addTaskInput = document.getElementById('add-task-input');
+    // DOM 요소 참조
+    const docsListElement = document.getElementById('docs-list');
+    const emptyStateElement = document.getElementById('empty-state');
+    const editorContainerElement = document.getElementById('editor-container');
+    const documentTitleElement = document.getElementById('document-title');
+    const documentContentElement = document.getElementById('document-content');
+    const todoListElement = document.getElementById('todo-list');
+    const todoInputElement = document.getElementById('todo-input');
+    const todoCountElement = document.getElementById('todo-count');
+    const todoCountCollapsedElement = document.getElementById('todo-count-collapsed');
+    const memoTextareaElement = document.getElementById('memo-textarea');
+    const themeToggleElement = document.getElementById('theme-toggle');
+    const rightSidebarElement = document.getElementById('right-sidebar');
+    const sidebarCollapsedElement = document.getElementById('sidebar-collapsed');
+    const sidebarToggleElement = document.getElementById('sidebar-toggle');
+    const sidebarToggleIconElement = document.getElementById('sidebar-toggle-icon');
+    const docOptionsModalElement = document.getElementById('doc-options-modal');
+    const trashModalElement = document.getElementById('trash-modal');
+    const trashItemsElement = document.getElementById('trash-items');
 
     // 초기화 함수
     function init() {
       loadFromLocalStorage();
-      renderDocuments();
-      renderTasks();
+      applyTheme();
+      renderDocumentsList();
+      renderTodosList();
+      updateTodoCount();
+      renderTrashItems();
+      setupEventListeners();
       checkEmptyState();
-      addEventListeners();
     }
 
     // 로컬 스토리지에서 데이터 로드
     function loadFromLocalStorage() {
-      const savedDocuments = localStorage.getItem('notion_clone_documents');
-      const savedTasks = localStorage.getItem('notion_clone_tasks');
-      const savedActiveDocumentId = localStorage.getItem('notion_clone_active_document_id');
+      const documents = localStorage.getItem('scheduler_documents');
+      const trashedDocuments = localStorage.getItem('scheduler_trashed_documents');
+      const todos = localStorage.getItem('scheduler_todos');
+      const activeDocumentId = localStorage.getItem('scheduler_active_document_id');
+      const memo = localStorage.getItem('scheduler_memo');
+      const darkMode = localStorage.getItem('scheduler_dark_mode');
+      const sidebarOpen = localStorage.getItem('scheduler_sidebar_open');
 
-      if (savedDocuments) {
-        appState.documents = JSON.parse(savedDocuments);
+      if (documents) appState.documents = JSON.parse(documents);
+      if (trashedDocuments) appState.trashedDocuments = JSON.parse(trashedDocuments);
+      if (todos) appState.todos = JSON.parse(todos);
+      if (activeDocumentId) appState.activeDocumentId = activeDocumentId;
+      if (memo) {
+        appState.memo = memo;
+        memoTextareaElement.value = memo;
       }
-
-      if (savedTasks) {
-        appState.tasks = JSON.parse(savedTasks);
-      }
-
-      if (savedActiveDocumentId) {
-        appState.activeDocumentId = savedActiveDocumentId;
-      }
+      if (darkMode) appState.darkMode = JSON.parse(darkMode);
+      if (sidebarOpen !== null) appState.sidebarOpen = JSON.parse(sidebarOpen);
     }
 
     // 로컬 스토리지에 데이터 저장
     function saveToLocalStorage() {
-      localStorage.setItem('notion_clone_documents', JSON.stringify(appState.documents));
-      localStorage.setItem('notion_clone_tasks', JSON.stringify(appState.tasks));
-      localStorage.setItem('notion_clone_active_document_id', appState.activeDocumentId);
+      localStorage.setItem('scheduler_documents', JSON.stringify(appState.documents));
+      localStorage.setItem('scheduler_trashed_documents', JSON.stringify(appState.trashedDocuments));
+      localStorage.setItem('scheduler_todos', JSON.stringify(appState.todos));
+      localStorage.setItem('scheduler_active_document_id', appState.activeDocumentId);
+      localStorage.setItem('scheduler_memo', appState.memo);
+      localStorage.setItem('scheduler_dark_mode', appState.darkMode);
+      localStorage.setItem('scheduler_sidebar_open', appState.sidebarOpen);
     }
 
-    // 빈 상태 체크
-    function checkEmptyState() {
-      if (appState.documents.length === 0) {
-        emptyState.style.display = 'flex';
-        editorContainer.style.display = 'none';
+    // 다크 모드 적용
+    function applyTheme() {
+      if (appState.darkMode) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggleElement.setAttribute('data-theme', 'dark');
       } else {
-        emptyState.style.display = 'none';
-        
-        if (appState.activeDocumentId) {
-          editorContainer.style.display = 'block';
-          loadDocument(appState.activeDocumentId);
-        } else if (appState.documents.length > 0) {
-          // 활성 문서가 없지만 문서가 있는 경우 첫 번째 문서 활성화
-          appState.activeDocumentId = appState.documents[0].id;
-          loadDocument(appState.activeDocumentId);
-          editorContainer.style.display = 'block';
-        }
+        document.documentElement.removeAttribute('data-theme');
+        themeToggleElement.removeAttribute('data-theme');
       }
     }
 
-    // 이벤트 리스너 추가
-    function addEventListeners() {
-      // 새 문서 버튼 클릭
-      addDocumentBtn.addEventListener('click', createNewDocument);
-      createDocBtn.addEventListener('click', createNewDocument);
+    // 사이드바 상태 적용
+    function applySidebarState() {
+      if (appState.sidebarOpen) {
+        rightSidebarElement.style.transform = 'translateX(0)';
+        sidebarCollapsedElement.classList.add('hidden');
+        sidebarToggleIconElement.className = 'fas fa-chevron-right';
+      } else {
+        rightSidebarElement.style.transform = 'translateX(100%)';
+        sidebarCollapsedElement.classList.remove('hidden');
+        sidebarToggleIconElement.className = 'fas fa-chevron-left';
+      }
+    }
 
-      // 문서 제목 및 내용 변경 감지
-      documentTitle.addEventListener('input', saveActiveDocument);
-      documentContent.addEventListener('input', saveActiveDocument);
-
-      // 할 일 추가 버튼 및 입력창
-      addTaskBtn.addEventListener('click', () => {
-        addTaskInput.classList.add('active');
-        addTaskInput.focus();
-      });
-
-      addTaskInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && addTaskInput.value.trim()) {
-          createNewTask(addTaskInput.value.trim());
-          addTaskInput.value = '';
-          addTaskInput.classList.remove('active');
-        } else if (e.key === 'Escape') {
-          addTaskInput.value = '';
-          addTaskInput.classList.remove('active');
+    // 빈 상태 확인
+    function checkEmptyState() {
+      if (appState.documents.length === 0) {
+        emptyStateElement.classList.remove('hidden');
+        editorContainerElement.classList.add('hidden');
+      } else {
+        emptyStateElement.classList.add('hidden');
+        editorContainerElement.classList.remove('hidden');
+        
+        if (appState.activeDocumentId) {
+          loadDocument(appState.activeDocumentId);
+        } else {
+          // 활성 문서가 없으면 첫 번째 문서 활성화
+          appState.activeDocumentId = appState.documents[0].id;
+          loadDocument(appState.activeDocumentId);
         }
-      });
+      }
+      
+      applySidebarState();
+    }
 
-      // 문서 포커스 이벤트 처리
-      documentTitle.addEventListener('focus', () => {
-        if (documentTitle.textContent === '제목 없음') {
-          documentTitle.textContent = '';
-        }
-      });
+    // 이벤트 리스너 설정
+    function setupEventListeners() {
+      // 문서 관련 이벤트
+      document.getElementById('add-page-btn').addEventListener('click', createNewDocument);
+      document.getElementById('create-doc-btn').addEventListener('click', createNewDocument);
+      documentTitleElement.addEventListener('input', saveActiveDocument);
+      documentContentElement.addEventListener('input', saveActiveDocument);
+      document.getElementById('search-input').addEventListener('input', filterDocuments);
+      
+      // 문서 옵션 모달 이벤트
+      document.getElementById('doc-options-close').addEventListener('click', closeDocOptionsModal);
+      document.getElementById('rename-btn').addEventListener('click', renameDocument);
+      document.getElementById('trash-move-btn').addEventListener('click', moveToTrash);
+      
+      // 휴지통 모달 이벤트
+      document.getElementById('trash-btn').addEventListener('click', openTrashModal);
+      document.getElementById('trash-modal-close').addEventListener('click', closeTrashModal);
+      document.getElementById('trash-modal-close-btn').addEventListener('click', closeTrashModal);
+      document.getElementById('empty-trash-btn').addEventListener('click', emptyTrash);
+      
+      // 할 일 관련 이벤트
+      document.getElementById('add-todo-btn').addEventListener('click', toggleTodoInput);
+      todoInputElement.addEventListener('keydown', handleTodoInputKeydown);
+      
+      // 메모 이벤트
+      memoTextareaElement.addEventListener('input', saveMemo);
+      
+      // 테마 전환 이벤트
+      themeToggleElement.addEventListener('click', toggleTheme);
+      
+      // 사이드바 토글 이벤트
+      sidebarToggleElement.addEventListener('click', toggleSidebar);
+      document.getElementById('close-sidebar').addEventListener('click', toggleSidebar);
+      document.getElementById('todo-collapsed-btn').addEventListener('click', toggleSidebar);
+    }
 
-      documentTitle.addEventListener('blur', () => {
-        if (!documentTitle.textContent.trim()) {
-          documentTitle.textContent = '제목 없음';
+    // 문서 목록 렌더링
+    function renderDocumentsList() {
+      docsListElement.innerHTML = '';
+      
+      const searchText = document.getElementById('search-input').value.toLowerCase();
+      
+      appState.documents.forEach(doc => {
+        // 검색어 필터링
+        if (searchText && !doc.title.toLowerCase().includes(searchText)) {
+          return;
         }
+        
+        const docElement = document.createElement('li');
+        docElement.className = `doc-item ${doc.id === appState.activeDocumentId ? 'active' : ''}`;
+        docElement.innerHTML = `
+          <div class="doc-title">${doc.title || '제목 없음'}</div>
+          <div class="doc-options">
+            <i class="fas fa-ellipsis-h"></i>
+          </div>
+        `;
+        
+        docElement.addEventListener('click', (e) => {
+          if (!e.target.closest('.doc-options')) {
+            appState.activeDocumentId = doc.id;
+            loadDocument(doc.id);
+            saveToLocalStorage();
+            renderDocumentsList();
+          }
+        });
+        
+        const optionsBtn = docElement.querySelector('.doc-options');
+        optionsBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          appState.activeDocOptionId = doc.id;
+          openDocOptionsModal();
+        });
+        
+        docsListElement.appendChild(docElement);
       });
+    }
 
-      documentContent.addEventListener('focus', () => {
-        if (documentContent.textContent === '여기에 내용을 입력하세요...') {
-          documentContent.textContent = '';
-        }
+    // 할 일 목록 렌더링
+    function renderTodosList() {
+      todoListElement.innerHTML = '';
+      
+      appState.todos.forEach(todo => {
+        const todoElement = document.createElement('li');
+        todoElement.className = 'todo-item';
+        todoElement.innerHTML = `
+          <div class="todo-checkbox ${todo.completed ? 'checked' : ''}"></div>
+          <div class="todo-text ${todo.completed ? 'completed' : ''}">${todo.text}</div>
+          <div class="todo-delete">
+            <i class="fas fa-times"></i>
+          </div>
+        `;
+        
+        const checkbox = todoElement.querySelector('.todo-checkbox');
+        checkbox.addEventListener('click', () => {
+          toggleTodoStatus(todo.id);
+        });
+        
+        const deleteBtn = todoElement.querySelector('.todo-delete');
+        deleteBtn.addEventListener('click', () => {
+          deleteTodo(todo.id);
+        });
+        
+        todoListElement.appendChild(todoElement);
       });
+    }
 
-      documentContent.addEventListener('blur', () => {
-        if (!documentContent.textContent.trim()) {
-          documentContent.textContent = '여기에 내용을 입력하세요...';
-        }
+    // 할 일 개수 업데이트
+    function updateTodoCount() {
+      const count = appState.todos.filter(todo => !todo.completed).length;
+      todoCountElement.textContent = count;
+      todoCountCollapsedElement.textContent = count;
+    }
+
+    // 휴지통 항목 렌더링
+    function renderTrashItems() {
+      trashItemsElement.innerHTML = '';
+      
+      if (appState.trashedDocuments.length === 0) {
+        trashItemsElement.innerHTML = '<p>휴지통이 비어있습니다.</p>';
+        return;
+      }
+      
+      appState.trashedDocuments.forEach(doc => {
+        const trashItem = document.createElement('li');
+        trashItem.className = 'trash-item';
+        trashItem.innerHTML = `
+          <div class="trash-item-title">${doc.title || '제목 없음'}</div>
+          <div class="trash-actions">
+            <div class="trash-restore" title="복원"><i class="fas fa-undo"></i></div>
+            <div class="trash-delete" title="영구 삭제"><i class="fas fa-trash"></i></div>
+          </div>
+        `;
+        
+        const restoreBtn = trashItem.querySelector('.trash-restore');
+        restoreBtn.addEventListener('click', () => {
+          restoreDocument(doc.id);
+        });
+        
+        const deleteBtn = trashItem.querySelector('.trash-delete');
+        deleteBtn.addEventListener('click', () => {
+          deleteDocumentPermanently(doc.id);
+        });
+        
+        trashItemsElement.appendChild(trashItem);
       });
     }
 
@@ -454,68 +1059,17 @@
       const newDocument = {
         id: Date.now().toString(),
         title: '제목 없음',
-        content: '여기에 내용을 입력하세요...',
+        content: '',
         createdAt: new Date().toISOString()
       };
-
+      
       appState.documents.push(newDocument);
       appState.activeDocumentId = newDocument.id;
       
       saveToLocalStorage();
-      renderDocuments();
+      renderDocumentsList();
       loadDocument(newDocument.id);
-      
-      emptyState.style.display = 'none';
-      editorContainer.style.display = 'block';
-    }
-
-    // 문서 삭제
-    function deleteDocument(id, event) {
-      event.stopPropagation();
-      
-      if (confirm('정말로 이 문서를 삭제하시겠습니까?')) {
-        appState.documents = appState.documents.filter(doc => doc.id !== id);
-        
-        if (appState.activeDocumentId === id) {
-          if (appState.documents.length > 0) {
-            appState.activeDocumentId = appState.documents[0].id;
-            loadDocument(appState.documents[0].id);
-          } else {
-            appState.activeDocumentId = null;
-            checkEmptyState();
-          }
-        }
-        
-        saveToLocalStorage();
-        renderDocuments();
-        checkEmptyState();
-      }
-    }
-
-    // 문서 목록 렌더링
-    function renderDocuments() {
-      documentsContainer.innerHTML = '';
-      
-      appState.documents.forEach(doc => {
-        const docElement = document.createElement('div');
-        docElement.className = `document-item ${doc.id === appState.activeDocumentId ? 'active' : ''}`;
-        docElement.innerHTML = `
-          <span>${doc.title === '제목 없음' || !doc.title ? '제목 없음' : doc.title}</span>
-          <span class="delete-doc-btn">삭제</span>
-        `;
-        
-        docElement.addEventListener('click', () => {
-          appState.activeDocumentId = doc.id;
-          saveToLocalStorage();
-          loadDocument(doc.id);
-          renderDocuments(); // 활성 상태 업데이트
-        });
-        
-        const deleteBtn = docElement.querySelector('.delete-doc-btn');
-        deleteBtn.addEventListener('click', (e) => deleteDocument(doc.id, e));
-        
-        documentsContainer.appendChild(docElement);
-      });
+      checkEmptyState();
     }
 
     // 문서 불러오기
@@ -523,11 +1077,8 @@
       const doc = appState.documents.find(doc => doc.id === id);
       
       if (doc) {
-        documentTitle.textContent = doc.title;
-        documentContent.textContent = doc.content;
-        
-        emptyState.style.display = 'none';
-        editorContainer.style.display = 'block';
+        documentTitleElement.value = doc.title || '';
+        documentContentElement.value = doc.content || '';
       }
     }
 
@@ -538,76 +1089,232 @@
       const index = appState.documents.findIndex(doc => doc.id === appState.activeDocumentId);
       
       if (index !== -1) {
-        appState.documents[index].title = documentTitle.textContent;
-        appState.documents[index].content = documentContent.textContent;
+        appState.documents[index].title = documentTitleElement.value;
+        appState.documents[index].content = documentContentElement.value;
+        appState.documents[index].updatedAt = new Date().toISOString();
         
         saveToLocalStorage();
-        renderDocuments(); // 제목 변경이 목록에 반영되도록
+        renderDocumentsList();
+      }
+    }
+
+    // 문서 이름 변경
+    function renameDocument() {
+      if (!appState.activeDocOptionId) return;
+      
+      const newTitle = prompt('새 제목을 입력하세요:');
+      
+      if (newTitle !== null) {
+        const index = appState.documents.findIndex(doc => doc.id === appState.activeDocOptionId);
+        
+        if (index !== -1) {
+          appState.documents[index].title = newTitle;
+          appState.documents[index].updatedAt = new Date().toISOString();
+          
+          saveToLocalStorage();
+          renderDocumentsList();
+          
+          if (appState.activeDocumentId === appState.activeDocOptionId) {
+            documentTitleElement.value = newTitle;
+          }
+        }
+      }
+      
+      closeDocOptionsModal();
+    }
+
+    // 문서를 휴지통으로 이동
+    function moveToTrash() {
+      if (!appState.activeDocOptionId) return;
+      
+      const index = appState.documents.findIndex(doc => doc.id === appState.activeDocOptionId);
+      
+      if (index !== -1) {
+        const doc = appState.documents[index];
+        appState.documents.splice(index, 1);
+        appState.trashedDocuments.push({
+          ...doc,
+          trashedAt: new Date().toISOString()
+        });
+        
+        // 활성 문서가 삭제된 경우 다른 문서 활성화
+        if (appState.activeDocumentId === appState.activeDocOptionId) {
+          if (appState.documents.length > 0) {
+            appState.activeDocumentId = appState.documents[0].id;
+            loadDocument(appState.activeDocumentId);
+          } else {
+            appState.activeDocumentId = null;
+            documentTitleElement.value = '';
+            documentContentElement.value = '';
+          }
+        }
+        
+        saveToLocalStorage();
+        renderDocumentsList();
+        checkEmptyState();
+      }
+      
+      closeDocOptionsModal();
+    }
+
+    // 문서 복원
+    function restoreDocument(id) {
+      const index = appState.trashedDocuments.findIndex(doc => doc.id === id);
+      
+      if (index !== -1) {
+        const doc = appState.trashedDocuments[index];
+        appState.trashedDocuments.splice(index, 1);
+        
+        // trashedAt 속성 제거
+        const { trashedAt, ...restoredDoc } = doc;
+        
+        appState.documents.push(restoredDoc);
+        
+        saveToLocalStorage();
+        renderTrashItems();
+        renderDocumentsList();
+      }
+    }
+
+    // 문서 영구 삭제
+    function deleteDocumentPermanently(id) {
+      if (confirm('정말로 이 문서를 영구적으로 삭제하시겠습니까?')) {
+        const index = appState.trashedDocuments.findIndex(doc => doc.id === id);
+        
+        if (index !== -1) {
+          appState.trashedDocuments.splice(index, 1);
+          
+          saveToLocalStorage();
+          renderTrashItems();
+        }
+      }
+    }
+
+    // 휴지통 비우기
+    function emptyTrash() {
+      if (confirm('정말로 휴지통을 비우시겠습니까? 모든 문서가 영구적으로 삭제됩니다.')) {
+        appState.trashedDocuments = [];
+        
+        saveToLocalStorage();
+        renderTrashItems();
+      }
+    }
+
+    // 할 일 입력창 토글
+    function toggleTodoInput() {
+      appState.activeTodoInput = !appState.activeTodoInput;
+      
+      if (appState.activeTodoInput) {
+        todoInputElement.classList.add('active');
+        todoInputElement.focus();
+      } else {
+        todoInputElement.classList.remove('active');
+        todoInputElement.value = '';
+      }
+    }
+
+    // 할 일 입력 처리
+    function handleTodoInputKeydown(e) {
+      if (e.key === 'Enter' && todoInputElement.value.trim()) {
+        createNewTodo(todoInputElement.value.trim());
+        todoInputElement.value = '';
+        toggleTodoInput();
+      } else if (e.key === 'Escape') {
+        toggleTodoInput();
       }
     }
 
     // 새 할 일 생성
-    function createNewTask(text) {
-      const newTask = {
+    function createNewTodo(text) {
+      const newTodo = {
         id: Date.now().toString(),
         text: text,
         completed: false,
         createdAt: new Date().toISOString()
       };
       
-      appState.tasks.push(newTask);
+      appState.todos.push(newTodo);
+      
       saveToLocalStorage();
-      renderTasks();
-    }
-
-    // 할 일 삭제
-    function deleteTask(id) {
-      appState.tasks = appState.tasks.filter(task => task.id !== id);
-      saveToLocalStorage();
-      renderTasks();
+      renderTodosList();
+      updateTodoCount();
     }
 
     // 할 일 상태 토글
-    function toggleTaskStatus(id) {
-      const index = appState.tasks.findIndex(task => task.id === id);
+    function toggleTodoStatus(id) {
+      const index = appState.todos.findIndex(todo => todo.id === id);
       
       if (index !== -1) {
-        appState.tasks[index].completed = !appState.tasks[index].completed;
+        appState.todos[index].completed = !appState.todos[index].completed;
+        
         saveToLocalStorage();
-        renderTasks();
+        renderTodosList();
+        updateTodoCount();
       }
     }
 
-    // 할 일 목록 렌더링
-    function renderTasks() {
-      todoList.innerHTML = '';
-      completedList.innerHTML = '';
+    // 할 일 삭제
+    function deleteTodo(id) {
+      const index = appState.todos.findIndex(todo => todo.id === id);
       
-      appState.tasks.forEach(task => {
-        const taskElement = document.createElement('div');
-        taskElement.className = 'task-item';
-        taskElement.innerHTML = `
-          <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
-          <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
-          <div class="task-delete">삭제</div>
-        `;
+      if (index !== -1) {
+        appState.todos.splice(index, 1);
         
-        const checkbox = taskElement.querySelector('.task-checkbox');
-        checkbox.addEventListener('change', () => toggleTaskStatus(task.id));
-        
-        const deleteBtn = taskElement.querySelector('.task-delete');
-        deleteBtn.addEventListener('click', () => deleteTask(task.id));
-        
-        if (task.completed) {
-          completedList.appendChild(taskElement);
-        } else {
-          todoList.appendChild(taskElement);
-        }
-      });
+        saveToLocalStorage();
+        renderTodosList();
+        updateTodoCount();
+      }
+    }
+
+    // 메모 저장
+    function saveMemo() {
+      appState.memo = memoTextareaElement.value;
+      saveToLocalStorage();
+    }
+
+    // 테마 전환
+    function toggleTheme() {
+      appState.darkMode = !appState.darkMode;
+      applyTheme();
+      saveToLocalStorage();
+    }
+
+    // 사이드바 토글
+    function toggleSidebar() {
+      appState.sidebarOpen = !appState.sidebarOpen;
+      applySidebarState();
+      saveToLocalStorage();
+    }
+
+    // 문서 필터링
+    function filterDocuments() {
+      renderDocumentsList();
+    }
+
+    // 문서 옵션 모달 열기
+    function openDocOptionsModal() {
+      docOptionsModalElement.classList.add('active');
+    }
+
+    // 문서 옵션 모달 닫기
+    function closeDocOptionsModal() {
+      docOptionsModalElement.classList.remove('active');
+      appState.activeDocOptionId = null;
+    }
+
+    // 휴지통 모달 열기
+    function openTrashModal() {
+      renderTrashItems();
+      trashModalElement.classList.add('active');
+    }
+
+    // 휴지통 모달 닫기
+    function closeTrashModal() {
+      trashModalElement.classList.remove('active');
     }
 
     // 애플리케이션 초기화
-    init();
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
