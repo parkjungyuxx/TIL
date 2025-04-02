@@ -1,0 +1,49 @@
+body {
+  display: flex;
+}
+
+#leftSideBar {
+  width: 300px;
+  height: 100vh;
+  background-color: #e2e8e0;
+  display: flex;
+  flex-direction: column;
+}
+
+#documentEditSpace {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#rightSideBar {
+  width: 300px;
+  height: 100vh;
+  background-color: #f2f2f2;
+}
+
+.leftSideBar-top-container {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  gap: 12px;
+  height: 100px;
+}
+
+.workSpace {
+  margin-top: 40px;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.profile {
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

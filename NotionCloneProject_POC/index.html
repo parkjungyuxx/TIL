@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notion</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="sidebar.js"></script>
+    <script type="module" src="history.js"></script>
+  </head>
+  <body>
+    <div id="leftSideBar">
+      <div class="leftSideBar-top-container">
+        <div>WorkClover</div>
+        <button id="addPageBtn">+ 페이지 추가</button>
+        <input type="text" placeholder="검색" />
+      </div>
+      <div class="workSpace">
+        <ul class="workSpce-document-list">
+          새 페이지
+        </ul>
+        <button>휴지통</button>
+      </div>
+      <div class="profile">박준규</div>
+    </div>
+    <div id="documentEditSpace">
+      <div>
+        <div>
+          작은 행운들이 쌓이는 당신만의 워크스페이스. <br />
+          WorkClover에 오신 것을 환영합니다!
+        </div>
+        <p>지금 바로 아이디어를 작성하고 정리해보세요.</p>
+        <button>문서만들기</button>
+      </div>
+    </div>
+    <div id="rightSideBar">
+      <div>
+        <input type="text" placeholder="할일 입력" />
+        <ul>
+          TodoList
+        </ul>
+      </div>
+      <div>
+        <textarea name="memo" id="" placeholder="여기는 메모장"></textarea>
+      </div>
+    </div>
+  </body>
+</html>
