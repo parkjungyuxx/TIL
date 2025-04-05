@@ -47,3 +47,14 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+dialog {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0); /* 검정 배경 + 반투명 */
+}
+

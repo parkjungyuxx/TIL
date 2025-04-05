@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css" />
     <script type="module" src="sidebar.js"></script>
     <script type="module" src="history.js"></script>
+    <script type="module" src="trashcan.js"></script>
   </head>
   <body>
     <div id="leftSideBar">
@@ -20,7 +21,14 @@
         <ul class="workSpce-document-list">
           새 페이지
         </ul>
-        <button>휴지통</button>
+        <button id="openDialogBtn">휴지통</button>
+
+        <!-- dialog 모달 -->
+        <dialog id="trashDialog">
+          <h2>휴지통</h2>
+          <p>삭제된 문서들을 여기에 표시할 수 있어요.</p>
+          <button id="closeDialogBtn">닫기</button>
+        </dialog>
       </div>
       <div class="profile">박준규</div>
     </div>
