@@ -4,4 +4,25 @@
  */
 
 // 디바운스 함수
-//
+
+window.addEventListener("DOMContentLoaded", () => {
+  const editDiv = document.getElementById("edit-div");
+
+  if (localStorage.getItem("context"))
+    editDiv.textContent = localStorage.getItem("context");
+
+  const debounce = (callback, delay) => {
+    let timer;
+    return function () {
+      clearTimeout(timer);
+      setTimeout(() => {
+        callback();
+      }, delay);
+    };
+  };
+
+  const saveTextContext = debounce(() => {
+    localStorage.setItem("context", editDiv.textContent);
+  }, 1000);
+  editDiv.addEventListener("input", saveTextContext);
+});
