@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@layer components {
+  .button-style-default {
+    @apply p-[16px] rounded-[6px] bg-[#4A3AFF] text-[#FFFFFF] font-bold text-lg;
+  }
+  .button-style-outline {
+    @apply p-[16px] rounded-[6px] bg-[#FFFFFF] text-[#382CBF] font-bold text-lg;
+  }
+  .button-style-hover {
+    @apply p-[16px] rounded-[6px] bg-[#2C2399] text-[#FFFFFF] font-bold text-lg;
+  }
+}

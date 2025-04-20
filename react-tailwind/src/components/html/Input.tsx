@@ -1,4 +1,4 @@
-import { HTMLInputTypeAttribute } from "react";
+import { HTMLInputTypeAttribute, ReactNode, ReactPortal } from "react";
 import { twMerge } from "tailwind-merge";
 
 type OnlyLiterals<T> = T extends string
