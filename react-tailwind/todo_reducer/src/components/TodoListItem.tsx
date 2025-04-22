@@ -1,4 +1,4 @@
-import { ActionDispatch, useState } from "react";
+import { ActionDispatch } from "react";
 
 export default function TodoListItem({
   todo,
@@ -21,7 +21,12 @@ export default function TodoListItem({
           {todo.text}
         </label>
       </div>
-      <button className="text-red-500 hover:text-red-700 ml-4">Delete</button>
+      <button
+        className="text-red-500 hover:text-red-700 ml-4"
+        onClick={() => dispatch({ type: "DeleteTodo", payload: todo.id })}
+      >
+        Delete
+      </button>
     </li>
   );
 }

@@ -16,6 +16,8 @@ export default function todoReducer(
       return todos.map((todo) =>
         todo.id === action.payload ? { ...todo, done: !todo.done } : todo
       );
+    case "DeleteTodo":
+      return todos.filter((todo) => todo.id !== action.payload);
 
     default:
       return {};

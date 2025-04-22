@@ -8,4 +8,8 @@ type TodoReducerAction =
   | {
       type: "ToggleTodo";
       payload: number;
+    }
+  | {
+      type: "DeleteTodo";
+      payload: number;
     };
