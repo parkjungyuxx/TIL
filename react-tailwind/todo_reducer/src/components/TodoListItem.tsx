@@ -17,11 +17,8 @@ export default function TodoListItem({
           onChange={() => dispatch({ type: "ToggleTodo", payload: todo.id })}
           checked={todo.done}
         />
-        <label
-          htmlFor=""
-          style={{ textDecoration: todo.done ? "line-through" : "" }}
-        >
-          {todo}
+        <label style={{ textDecoration: todo.done ? "line-through" : "" }}>
+          {todo.text}
         </label>
       </div>
       <button className="text-red-500 hover:text-red-700 ml-4">Delete</button>

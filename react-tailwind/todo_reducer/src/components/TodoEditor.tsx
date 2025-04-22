@@ -19,6 +19,7 @@ export default function TodoEditor({
     <form className="flex p-4" onSubmit={handleSubmit}>
       <input
         type="text"
+        value={text}
         placeholder="Enter a new todo"
         className="flex-grow p-2 border rounded-l-md focus:outline-none"
         onChange={handleInputChange}

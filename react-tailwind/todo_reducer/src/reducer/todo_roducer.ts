@@ -12,6 +12,10 @@ export default function todoReducer(
           done: false,
         },
       ];
+    case "ToggleTodo":
+      return todos.map((todo) =>
+        todo.id === action.payload ? { ...todo, done: !todo.done } : todo
+      );
 
     default:
       return {};
