@@ -15,24 +15,32 @@ export default function Signup() {
     signup({ email, password, fullName });
   };
   return (
-    <>
-      <form action="submit" onSubmit={handleSubmit}></form>
-      <input
-        type="email"
-        placeholder="email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="fullName"
-        onChange={(e) => setFullName(e.target.value)}
-      />
-      <button>signup</button>
-    </>
+    <div className="flex min-w-screen justify-center h-screen items-center">
+      <form
+        action="submit"
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-[8px]"
+      >
+        <input
+          type="email"
+          placeholder="email"
+          className="border border-black w-[328px]"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="password"
+          className="border border-black w-[328px]"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="fullName"
+          className="border border-black w-[328px]"
+          onChange={(e) => setFullName(e.target.value)}
+        />
+        <button className="w-[328px]">signup</button>
+      </form>
+    </div>
   );
 }
