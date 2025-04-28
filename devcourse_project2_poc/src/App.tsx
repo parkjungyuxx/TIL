@@ -1,9 +1,9 @@
-import Signup from "./components/Signup";
+import Translator from "./components/Translator";
 
 export default function App() {
   return (
     <>
-      <Signup />
+      <Translator />
     </>
   );
 }
