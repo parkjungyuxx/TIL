@@ -6,7 +6,6 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
-// 요청 간격을 관리하기 위한 마지막 요청 시간 저장
 let lastRequestTime = 0;
 
 export default function Translator() {
@@ -15,7 +14,6 @@ export default function Translator() {
   const [loading, setLoading] = useState(false);
   const [lastTranslated, setLastTranslated] = useState("");
   
-  // 로컬 스토리지에서 이전 번역 결과 불러오기
   useEffect(() => {
     const savedTranslations = localStorage.getItem("translations");
     if (savedTranslations) {
@@ -28,10 +26,8 @@ export default function Translator() {
     }
   }, []);
 
-  // 지수 백오프를 포함한 대기 함수
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
   
-  // 번역 캐시 확인
   const checkTranslationCache = (text: string): string | null => {
     try {
       const cacheStr = localStorage.getItem("translationCache");
@@ -45,7 +41,6 @@ export default function Translator() {
     return null;
   };
   
-  // 번역 결과 캐시에 저장
   const saveToCache = (text: string, translation: string) => {
     try {
       const cacheStr = localStorage.getItem("translationCache");
@@ -53,7 +48,6 @@ export default function Translator() {
       cache[text] = translation;
       localStorage.setItem("translationCache", JSON.stringify(cache));
       
-      // 최근 번역 기록 저장
       const translations = JSON.parse(localStorage.getItem("translations") || "[]");
       translations.unshift({ text, translation, date: new Date().toISOString() });
       if (translations.length > 10) translations.pop(); // 최대 10개만 저장
@@ -71,10 +65,9 @@ export default function Translator() {
       return cachedTranslation;
     }
     
-    // 너무 빠른 요청을 방지하기 위한 조절
     const now = Date.now();
     const timeSinceLastRequest = now - lastRequestTime;
-    const minWaitTime = 10000; // 최소 10초 간격
+    const minWaitTime = 10000; 
     
     if (timeSinceLastRequest < minWaitTime) {
       const waitTime = minWaitTime - timeSinceLastRequest;
@@ -82,10 +75,8 @@ export default function Translator() {
       await sleep(waitTime);
     }
     
-    // 재시도 시 지수 백오프 적용
     const backoffTime = retries < 3 ? Math.pow(2, 3 - retries) * 5000 : 5000;
     
-    // 최소 대기 시간
     await sleep(3000); 
     
     try {
@@ -108,7 +99,6 @@ export default function Translator() {
       
       const translatedResult = response.choices[0].message.content?.trim() || "";
       
-      // 번역 결과 캐시에 저장
       saveToCache(text, translatedResult);
       
       return translatedResult;
@@ -128,7 +118,6 @@ export default function Translator() {
   const handleTranslate = async () => {
     if (!inputText.trim() || loading) return;
     
-    // 입력 텍스트가 너무 길면 분할 처리
     if (inputText.length > 500) {
       alert("텍스트가 너무 깁니다. 500자 이하로 나누어 번역해주세요.");
       return;

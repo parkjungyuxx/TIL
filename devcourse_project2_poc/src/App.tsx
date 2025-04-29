@@ -1,9 +1,9 @@
-import Translator from "./components/Translator";
+import ArtistSearch from "./components/ArtistSearch";
 
 export default function App() {
   return (
     <>
-      <Translator />
+      <ArtistSearch />
     </>
   );
 }
