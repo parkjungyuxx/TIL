@@ -73,7 +73,7 @@ export default function ArtistSearch() {
 
   const handleSelectArtist = (artist: Artist) => {
     setSelectedArtist(artist);
-    console.log("선택된 아티스트:", artist);
+    console.log("선택된 아티스트:", artist.name);
     setInputValue(""); 
     setArtistResults([]);
   };
