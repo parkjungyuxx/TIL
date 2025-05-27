@@ -41,6 +41,7 @@ export default function Search() {
           },
         });
         setAccessToken(response.data.access_token);
+        console.log(response);
       } catch (error) {
         console.error("Failed to get access token", error);
       }
@@ -49,26 +50,22 @@ export default function Search() {
     getAccessToken();
   }, []);
 
-
   useEffect(() => {
     const searchSpotify = async () => {
       if (!inputValue) return;
       if (!accessToken) return;
 
       try {
-        const response = await axios.get(
-          "https://api.spotify.com/v1/search",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            params: {
-              q: inputValue,
-              type: searchType,
-              limit: 5,
-            },
-          }
-        );
+        const response = await axios.get("https://api.spotify.com/v1/search", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            q: inputValue,
+            type: searchType,
+            limit: 5,
+          },
+        });
 
         if (searchType === "artist") {
           setArtistResults(response.data.artists.items);
@@ -84,7 +81,7 @@ export default function Search() {
 
     const timer = setTimeout(() => {
       searchSpotify();
-    }, 500); 
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [inputValue, searchType, accessToken]);
@@ -92,7 +89,7 @@ export default function Search() {
   const handleSelect = (item: Artist | Track) => {
     setSelectedItem(item);
     console.log("선택된 데이터:", item);
-    setInputValue(""); 
+    setInputValue("");
     setArtistResults([]);
     setTrackResults([]);
   };
@@ -113,7 +110,9 @@ export default function Search() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           className="border p-2 w-full"
-          placeholder={searchType === "artist" ? "가수 이름 입력" : "노래 제목 입력"}
+          placeholder={
+            searchType === "artist" ? "가수 이름 입력" : "노래 제목 입력"
+          }
         />
       </div>
 
@@ -140,13 +139,17 @@ export default function Search() {
               className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-3"
             >
               <img
-                src={track.album.images[0]?.url || "https://via.placeholder.com/40"}
+                src={
+                  track.album.images[0]?.url || "https://via.placeholder.com/40"
+                }
                 alt={track.name}
                 className="w-10 h-10 rounded object-cover"
               />
               <div>
                 <div className="font-medium">{track.name}</div>
-                <div className="text-sm text-gray-500">{track.artists.map((a) => a.name).join(", ")}</div>
+                <div className="text-sm text-gray-500">
+                  {track.artists.map((a) => a.name).join(", ")}
+                </div>
               </div>
             </li>
           ))}
