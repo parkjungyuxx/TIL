@@ -12,9 +12,7 @@ export const useTodoStore = defineStore('todo', () => {
   }
 
   const toggleTodo = (id) => {
-    todos.value = todos.value.map((todos) =>
-      todos.id === id ? { ...todos, done: !todos.done } : todos
-    )
+    todos.value = todos.value.map((todo) => (todo.id === id ? { ...todo, done: !todo.done } : todo))
   }
 
   const deleteTodo = (id) => {
