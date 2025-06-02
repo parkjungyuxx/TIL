@@ -3,6 +3,7 @@ import RootLayout from "./layout/RootLayout";
 import Home from "./pages/Home";
 import Game from "./pages/Game";
 import SoloGame from "./pages/SoloGame";
+import Home2 from "./pages/Home2";
 
 const router = createBrowserRouter([
   {
@@ -10,7 +11,8 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        Component: Home,
+        // Component: Home,
+        Component: Home2,
       },
       {
         path: "game",
