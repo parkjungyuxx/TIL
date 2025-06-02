@@ -1,7 +1,8 @@
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import draw from "../../assets/images/streamline_pen-draw-solid.svg";
 
 export default function Navbar() {
+  const navigate = useNavigate();
   return (
     <>
       <nav className="py-10">
@@ -17,13 +18,13 @@ export default function Navbar() {
               >
                 Home
               </NavLink>
-              <NavLink 
+              <NavLink
                 to="/"
                 className="px-4 flex items-center justify-center h-full rounded-[12px] hover:bg-[#fdfaf226] transition-colors"
               >
                 Community
               </NavLink>
-              <NavLink 
+              <NavLink
                 to="/"
                 className="px-4 flex items-center justify-center h-full rounded-[12px] hover:bg-[#fdfaf226] transition-colors"
               >
@@ -31,7 +32,10 @@ export default function Navbar() {
               </NavLink>
             </div>
           </div>
-          <div className="flex border border-[#222222] bg-[#c7ff69] text-center items-center rounded-[8px] ml-[14px] px-[30px]">
+          <div
+            className="flex border border-[#222222] bg-[#c7ff69] text-center items-center rounded-[8px] ml-[14px] px-[30px] cursor-pointer"
+            onClick={() => navigate("game")}
+          >
             Launch Game
           </div>
         </div>

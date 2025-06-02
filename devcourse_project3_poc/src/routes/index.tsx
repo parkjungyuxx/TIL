@@ -1,6 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import RootLayout from "./layout/RootLayout";
 import Home from "./pages/Home";
+import Game from "./pages/Game";
+import SoloGame from "./pages/SoloGame";
 
 const router = createBrowserRouter([
   {
@@ -9,6 +11,14 @@ const router = createBrowserRouter([
       {
         path: "/",
         Component: Home,
+      },
+      {
+        path: "game",
+        Component: Game,
+      },
+      {
+        path: "sologame",
+        Component: SoloGame,
       },
     ],
   },
