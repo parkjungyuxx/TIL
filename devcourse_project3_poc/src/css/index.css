@@ -7,6 +7,13 @@
     font-style: normal;
   }
 }
+
+@font-face {
+  font-family: "yangjin";
+  src: url("../assets/fonts/yangjin.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
 body {
-  font-family: "Anton";
+  font-family: "yangjin";
 }
