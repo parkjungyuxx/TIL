@@ -28,7 +28,7 @@ export default function Navbar2() {
                 to="/"
                 className="px-4 flex items-center justify-center h-full rounded-[12px] hover:bg-[#fdfaf226] transition-colors"
               >
-                About us
+                Ranking
               </NavLink>
             </div>
           </div>
