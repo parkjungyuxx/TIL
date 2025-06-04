@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router";
 import draw from "../../assets/images/streamline_pen-draw-solid.svg";
+import cat from "../../assets/images/cat.jpeg";
 
 export default function Navbar2() {
   const navigate = useNavigate();

@@ -1,45 +1,25 @@
-import { NavLink, useNavigate } from "react-router";
-import draw from "../../assets/images/streamline_pen-draw-solid.svg";
+import { useNavigate } from "react-router";
+import paw from "../../assets/images/paw.svg";
+import logo from "../../assets/images/logo.svg";
 
 export default function Navbar() {
   const navigate = useNavigate();
   return (
-    <>
-      <nav className="py-10">
-        <div className="flex justify-center h-[62px]">
-          <div className="flex bg-[#222222] p-2 rounded-[8px]">
-            <div className="bg-[#FA5D29] rounded-[8px] flex items-center justify-center w-[56px]">
-              <img src={draw} alt="draw icon" />
-            </div>
-            <div className="text-white flex gap-4 justify-center items-center px-[20px] whitespace-nowrap">
-              <NavLink
-                to="/"
-                className="bg-[#fdfaf226] h-full px-4 items-center flex justify-center rounded-[12px]"
-              >
-                Home
-              </NavLink>
-              <NavLink
-                to="/"
-                className="px-4 flex items-center justify-center h-full rounded-[12px] hover:bg-[#fdfaf226] transition-colors"
-              >
-                Community
-              </NavLink>
-              <NavLink
-                to="/"
-                className="px-4 flex items-center justify-center h-full rounded-[12px] hover:bg-[#fdfaf226] transition-colors"
-              >
-                About us
-              </NavLink>
-            </div>
-          </div>
-          <div
-            className="flex border border-[#222222] bg-[#c7ff69] text-center items-center rounded-[8px] ml-[14px] px-[30px] cursor-pointer"
-            onClick={() => navigate("game")}
-          >
-            Launch Game
-          </div>
+    <nav className="flex justify-between items-center px-12">
+      <div className="flex">
+        <img src={paw} alt="" />
+        <img src={logo} alt="" />
+      </div>
+      <nav>
+        <div className="flex gap-[16px]">
+          <button className="py-3 px-4 border border-black rounded-[4px]">
+            Try it with Guest Mode
+          </button>
+          <button className="py-3 px-4 border border-black rounded-[4px]">
+            Join To DRAW
+          </button>
         </div>
       </nav>
-    </>
+    </nav>
   );
 }

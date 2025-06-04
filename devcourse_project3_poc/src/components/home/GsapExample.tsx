@@ -6,6 +6,12 @@ import jungyu from "../../assets/images/jungyu.png";
 import suji from "../../assets/images/suji.png";
 import yebin from "../../assets/images/yebin.png";
 import youbin from "../../assets/images/youbin.png";
+import cat from "../../assets/images/cat.jpeg";
+import background from "../../assets/images/background.svg";
+import text from "../../assets/images/text.svg";
+import darkmode from "../../assets/images/darkmode.svg";
+import card from "../../assets/images/card.svg";
+import fire from "../../assets/images/fire.svg";
 
 const GsapExample = () => {
   const [gsapLoaded, setGsapLoaded] = useState(false);
@@ -21,6 +27,8 @@ const GsapExample = () => {
   const leftTextRefs = useRef([]);
   const rightTextRefs = useRef([]);
   const teamImageRefs = useRef([]);
+  const fireLeftRef = useRef(null);
+  const fireRightRef = useRef(null);
 
   useEffect(() => {
     // GSAP 로드
@@ -243,6 +251,9 @@ const GsapExample = () => {
 
     // 팀 섹션 애니메이션 - 스크롤 트리거 사용
     setupTeamSectionAnimation();
+
+    // 불꽃 애니메이션 시작
+    startFireAnimation();
   };
 
   const setupTeamSectionAnimation = () => {
@@ -309,6 +320,60 @@ const GsapExample = () => {
     });
   };
 
+  const startFireAnimation = () => {
+    if (!window.gsap) return;
+
+    const { gsap } = window;
+
+    // 왼쪽 불꽃 애니메이션
+    if (fireLeftRef.current) {
+      gsap.to(fireLeftRef.current, {
+        scale: 1.1,
+        rotation: "5deg",
+        duration: 0.8,
+        ease: "power2.inOut",
+        repeat: -1,
+        yoyo: true,
+        transformOrigin: "bottom center",
+      });
+
+      // 추가적인 흔들림 효과
+      gsap.to(fireLeftRef.current, {
+        x: "random(-3, 3)",
+        y: "random(-2, 2)",
+        duration: 0.5,
+        ease: "none",
+        repeat: -1,
+        yoyo: true,
+      });
+    }
+
+    // 오른쪽 불꽃 애니메이션 (약간 다른 타이밍으로)
+    if (fireRightRef.current) {
+      gsap.to(fireRightRef.current, {
+        scale: 1.15,
+        rotation: "-8deg",
+        duration: 1,
+        ease: "power2.inOut",
+        repeat: -1,
+        yoyo: true,
+        transformOrigin: "bottom center",
+        delay: 0.2,
+      });
+
+      // 추가적인 흔들림 효과
+      gsap.to(fireRightRef.current, {
+        x: "random(-4, 4)",
+        y: "random(-3, 3)",
+        duration: 0.6,
+        ease: "none",
+        repeat: -1,
+        yoyo: true,
+        delay: 0.3,
+      });
+    }
+  };
+
   const startSlidingTextAnimation = () => {
     if (!window.gsap || !slidingTextRef.current) return;
 
@@ -353,247 +418,51 @@ const GsapExample = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen w-full">
       {/* Hero Section */}
       <section
         ref={heroRef}
-        className="min-h-screen flex flex-col justify-start items-center px-6 bg-gradient-to-b from-white to-white pt-40 bg-no-repeat"
+        style={{
+          backgroundImage: `url(${background})`,
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+        }}
+        className="min-h-screen w-full flex flex-col justify-start items-center px-6 bg-gradient-to-b from-white to-white pt-40 bg-no-repeat relative"
       >
-        <div className="w-[1320px] text-center">
-          <h1
-            ref={titleRef}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-8 leading-tight relative w-full"
-          >
-            <span className="relative inline-block">
-              <span className="relative">
-                Draw. Duel. Meet. Repeat.
-                <div className="absolute w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 -top-4 -left-6 md:-top-6 md:-left-8 lg:-top-8 lg:-left-10 z-10">
-                  <img
-                    ref={imageMotionRef}
-                    src={toyStory}
-                    alt="Motion icon"
-                    className="w-full h-full rounded-full border-4 border-white shadow-lg object-cover"
-                  />
-                </div>
-              </span>
-            </span>
-            <br />
-            <span className="relative inline-block">
-              Win with style
-              <span className="relative">
-                .
-                <div className="absolute w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 -top-2 -right-4 md:-top-4 md:-right-6 lg:-top-4 lg:-right-8 z-10">
-                  <img
-                    ref={imageSimpleRef}
-                    src={penguin}
-                    alt="Penguin icon"
-                    className="w-full h-full rounded-full border-4 border-white shadow-lg object-cover"
-                  />
-                </div>
-              </span>
-            </span>
-          </h1>
-          <p
-            ref={subtitleRef}
-            className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-8"
-          >
-            Unleash your creativity and challenge artists from around the world
-            in real-time drawing battles.
-          </p>
-          <button className="bg-[#D6C1FF] px-12 py-4 rounded-4xl text-[18px] mt-12">
-            Join
-          </button>
-
-          <div
-            className="text-lg md:text-xl text-gray-500 font-medium h-8 overflow-hidden relative mx-auto mt-24"
-            style={{ width: "1320px" }}
-          >
-            <div
-              ref={slidingTextRef}
-              className="flex items-center h-full whitespace-nowrap"
-            ></div>
-          </div>
-        </div>
+        <img src={text} alt="" className="absolute right-60" />
+        <button className="absolute bottom-56 left-224 cursor-pointer">
+          <img src={darkmode} alt="" />
+        </button>
+        <button className="bg-[#F45A5A] absolute bottom-36 left-198 px-[98px] py-3 rounded-[4.73px] border-2 border-black border-b-5 cursor-pointer">
+          Start To Draw
+        </button>
       </section>
-
-      {/* Project Introduction Section */}
-      <section className="py-20 px-6 relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white to-white"></div>
-        <div
-          className="absolute top-10 right-10 w-32 h-32 opacity-20"
-          // style={{
-          //   backgroundImage: `url(${brush})`,
-          //   backgroundSize: "contain",
-          //   backgroundRepeat: "no-repeat",
-          // }}
-        ></div>
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div
-            ref={(el) => (sectionRefs.current[0] = el)}
-            className="text-center mb-16"
-          >
-            {/* Main title */}
-            <div className="inline-flex items-center gap-4 bg-white backdrop-blur-sm px-8 py-4 rounded-full border border-[#222222] mb-8">
-              <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
-              <span className="text-[#222222] font-medium text-lg">
-                Project Introduction
-              </span>
-            </div>
-
-            <h2
-              className="text-4xl md:text-6xl font-bold text-gray-900 mb-8 leading-tight"
-              style={{ fontFamily: "yangjin" }}
-            >
-              실시간 낙서 그림
-              <br />
-              <span className="text-[#22222280]">대결 플랫폼</span>
-            </h2>
-
-            <p
-              className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12"
-              style={{ fontFamily: "yangjin" }}
-            >
-              우리는 황수지팀입니다 반갑습니다. 황수지, 유빈예빈, 박준규입니다.
-              반갑습니다. 우리는 이런 프로젝트 합니다. 그림 그리기 그리기
-              싱글모드 멀티모드 대결 대결
-            </p>
-
-            {/* Feature highlights */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-              <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-orange-100 hover:shadow-lg transition-all duration-300">
-                <div className="w-16 h-16 bg-[#22222280] rounded-full flex items-center justify-center text-white mx-auto mb-4">
-                  <svg
-                    className="w-8 h-8"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
-                  </svg>
-                </div>
-                <h3
-                  className="text-xl font-semibold text-gray-900 mb-3"
-                  style={{ fontFamily: "yangjin" }}
-                >
-                  실시간 대결
-                </h3>
-                <p className="text-gray-600" style={{ fontFamily: "yangjin" }}>
-                  라이브 드로잉 배틀로 긴장감 넘치는 경험
-                </p>
-              </div>
-
-              <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-orange-100 hover:shadow-lg transition-all duration-300">
-                <div className="w-16 h-16 bg-[#22222280] rounded-full flex items-center justify-center text-white mx-auto mb-4">
-                  <svg
-                    className="w-8 h-8"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                    />
-                  </svg>
-                </div>
-                <h3
-                  className="text-xl font-semibold text-gray-900 mb-3"
-                  style={{ fontFamily: "yangjin" }}
-                >
-                  직관적 도구
-                </h3>
-                <p className="text-gray-600" style={{ fontFamily: "yangjin" }}>
-                  누구나 쉽게 사용할 수 있는 드로잉 툴
-                </p>
-              </div>
-
-              <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-orange-100 hover:shadow-lg transition-all duration-300">
-                <div className="w-16 h-16 bg-[#22222280] rounded-full flex items-center justify-center text-white mx-auto mb-4">
-                  <svg
-                    className="w-8 h-8"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                </div>
-                <h3
-                  className="text-xl font-semibold text-gray-900 mb-3"
-                  style={{ fontFamily: "yangjin" }}
-                >
-                  커뮤니티
-                </h3>
-                <p className="text-gray-600" style={{ fontFamily: "yangjin" }}>
-                  여러 사람들과 함께 이야기
-                </p>
-              </div>
-            </div>
+      {/* Whats hot */}
+      <div className="flex justify-center items-center mt-20 ">
+        <section className="py-20 px-6 relative  bg-[#222222]/[0.87] w-[1156px] h-[569px] flex flex-col justify-center items-center rounded-[24px]">
+          <div className="text-[64px] text-white flex justify-center items-center gap-[24px]">
+            <img
+              ref={fireLeftRef}
+              src={fire}
+              alt="fire left"
+              className="-mt-[124px]"
+            />
+            What's Hot
+            <img
+              ref={fireRightRef}
+              src={fire}
+              alt="fire right"
+              className="-mt-[124px]"
+            />
           </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      {/* <section className="py-10 px-6 bg-[#D6C1FF] rounded-[24px] mb-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: "신기록 달성",
-                desc: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo minima perspiciatis veniam eveniet qui modi ducimus, vero expedita facilis! Aperiam repellat corporis praesentium iusto cum, quos molestiae velit eaque incidunt!",
-              },
-              {
-                title: "신기록 달성",
-                desc: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo minima perspiciatis veniam eveniet qui modi ducimus, vero expedita facilis! Aperiam repellat corporis praesentium iusto cum, quos molestiae velit eaque incidunt!",
-              },
-              {
-                title: "신기록 달성",
-                desc: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo minima perspiciatis veniam eveniet qui modi ducimus, vero expedita facilis! Aperiam repellat corporis praesentium iusto cum, quos molestiae velit eaque incidunt!",
-              },
-              {
-                title: "신기록 달성",
-                desc: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo minima perspiciatis veniam eveniet qui modi ducimus, vero expedita facilis! Aperiam repellat corporis praesentium iusto cum, quos molestiae velit eaque incidunt!",
-              },
-              {
-                title: "신기록 달성",
-                desc: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo minima perspiciatis veniam eveniet qui modi ducimus, vero expedita facilis! Aperiam repellat corporis praesentium iusto cum, quos molestiae velit eaque incidunt!",
-              },
-              {
-                title: "신기록 달성",
-                desc: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo minima perspiciatis veniam eveniet qui modi ducimus, vero expedita facilis! Aperiam repellat corporis praesentium iusto cum, quos molestiae velit eaque incidunt!",
-              },
-            ].map((feature, index) => (
-              <div
-                key={index}
-                ref={(el) => (cardRefs.current[index] = el)}
-                className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300"
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
-              </div>
-            ))}
+          <div className="flex gap-[50px] mt-[18px]">
+            <img src={card} alt="" />
+            <img src={card} alt="" />
+            <img src={card} alt="" />
+            <img src={card} alt="" />
           </div>
-        </div>
-      </section> */}
+        </section>
+      </div>
 
       {/* Team Section with Animation */}
       <section className="mt-64">
@@ -602,7 +471,7 @@ const GsapExample = () => {
             ref={(el) => (teamSectionRef.current[0] = el)}
             className="flex items-center text-9xl"
           >
-            <span ref={(el) => (leftTextRefs.current[0] = el)}>You</span>
+            <span ref={(el) => (leftTextRefs.current[0] = el)}>Yu</span>
             <img
               ref={(el) => (teamImageRefs.current[0] = el)}
               src={youbin}
