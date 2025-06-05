@@ -1,9 +1,7 @@
-import { useNavigate } from "react-router";
 import paw from "../../assets/images/paw.svg";
 import logo from "../../assets/images/logo.svg";
 
 export default function Navbar() {
-  const navigate = useNavigate();
   return (
     <nav className="flex justify-between items-center px-12">
       <div className="flex">
