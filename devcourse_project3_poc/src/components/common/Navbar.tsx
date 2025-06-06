@@ -3,7 +3,7 @@ import logo from "../../assets/images/logo.svg";
 
 export default function Navbar() {
   return (
-    <nav className="flex justify-between items-center px-12">
+    <nav className="flex justify-between items-center px-20">
       <div className="flex">
         <img src={paw} alt="" />
         <img src={logo} alt="" />
