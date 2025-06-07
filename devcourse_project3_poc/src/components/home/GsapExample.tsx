@@ -393,14 +393,14 @@ const GsapExample = () => {
         className="min-h-screen w-full flex flex-col justify-start items-center px-6 bg-gradient-to-b from-white to-white pt-40 bg-no-repeat relative"
       >
         <img src={text} alt="" className="absolute right-60" />
-        <button className="absolute bottom-56 left-224 cursor-pointer">
+        <button className="absolute bottom-42 left-174 cursor-pointer">
           <img src={darkmode} alt="" />
         </button>
         <button className="bg-[#F45A5A] absolute bottom-36 left-198 px-[98px] py-3 rounded-[4.73px] border-2 border-black border-b-5 cursor-pointer">
           Start To Draw
         </button>
       </section>
-
+      
       <div className="flex justify-center items-center mt-20 ">
         <section className="py-20 px-6 relative  bg-[#222222]/[0.87] w-[1156px] h-[569px] flex flex-col justify-center items-center rounded-[24px]">
           <div className="text-[64px] text-white flex justify-center items-center gap-[24px]">
