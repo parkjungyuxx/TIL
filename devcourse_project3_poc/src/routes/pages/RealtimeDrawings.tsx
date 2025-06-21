@@ -13,15 +13,15 @@ export function useRealtimeDrawing() {
           event: "INSERT",
           schema: "storage",
           table: "objects",
-          filter: "bucket_id=eq.drawings", 
+          filter: "bucket_id=eq.drawings",
         },
         async (payload) => {
-          console.log("실시간 이미지 업로드 감지됨:", payload);
+          console.log(payload);
 
           const filePath = payload.new.name;
-          const { data } = supabase.storage.from("drawings").getPublicUrl(filePath);
-
-          console.log("🧩 public URL:", data.publicUrl);
+          const { data } = supabase.storage
+            .from("drawings")
+            .getPublicUrl(filePath);
 
           setImageUrls((prev) => [...prev, data.publicUrl]);
         }
